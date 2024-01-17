@@ -1,6 +1,6 @@
 package ru.netology.nmedia.dto
 
-import ru.netology.nmedia.util.Formatter
+import ru.netology.nmedia.util.numberToString
 
 data class Post(
     val id: Long,
@@ -13,9 +13,9 @@ data class Post(
     var likedByMe: Boolean = false
 ) {
 
-    fun getLikesCountText() = Formatter.numberToString(this.likesCount)
+    fun getLikesCountText() = numberToString(this.likesCount)
 
-    fun getSharesCountText() = Formatter.numberToString(this.sharesCount)
+    fun getSharesCountText() = numberToString(this.sharesCount)
 
-    fun getViewsCountText() = Formatter.numberToString(this.viewsCount)
+    fun getViewsCountText() = numberToString(this.viewsCount)
 }
