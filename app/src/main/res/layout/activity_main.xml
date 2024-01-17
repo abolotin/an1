@@ -15,7 +15,7 @@
         app:barrierMargin="@dimen/common_spacing"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/post_avatar_drawable" />
+        android:src="@drawable/post_avatar_drawable" />
 
     <TextView
         android:id="@+id/author"
