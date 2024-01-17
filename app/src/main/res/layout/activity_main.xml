@@ -15,7 +15,7 @@
         app:barrierMargin="@dimen/common_spacing"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@sample/post_avatars" />
+        tools:srcCompat="@drawable/post_avatar_drawable" />
 
     <TextView
         android:id="@+id/author"
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_spacing"
         android:autoLink="web"
-        android:linksClickable="false"
+        android:linksClickable="true"
         app:barrierMargin="@dimen/common_spacing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

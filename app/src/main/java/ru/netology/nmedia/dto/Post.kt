@@ -1,9 +1,6 @@
 package ru.netology.nmedia.dto
 
-import java.math.RoundingMode
-import java.text.DecimalFormat
-import kotlin.math.ln
-import kotlin.math.pow
+import ru.netology.nmedia.util.Formatter
 
 data class Post(
     val id: Long,
@@ -16,29 +13,9 @@ data class Post(
     var likedByMe: Boolean = false
 ) {
 
-    fun getLikesCountText(): String {
-        return numberToString(likesCount);
-    }
+    fun getLikesCountText() = Formatter.numberToString(this.likesCount)
 
-    fun getSharesCountText(): String {
-        return numberToString(sharesCount);
-    }
+    fun getSharesCountText() = Formatter.numberToString(this.sharesCount)
 
-    fun getViewsCountText(): String {
-        return numberToString(viewsCount);
-    }
-
-    fun numberToString(count: Long): String {
-        if (count < 1000) return count.toString();
-        val exp = (ln(count.toDouble()) / ln(1000.0)).toInt()
-
-        println(count.toDouble().toString() + ", " + exp.toString());
-        val df = DecimalFormat("###.#");
-        df.roundingMode = RoundingMode.FLOOR
-        return String.format(
-            "%s%c",
-            df.format(count / 1000.0.pow(exp.toDouble())),
-            "kMGTPE"[exp - 1]
-        )
-    }
+    fun getViewsCountText() = Formatter.numberToString(this.viewsCount)
 }
