@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     android:padding="@dimen/common_spacing"
     tools:context=".MainActivity">
 
@@ -64,9 +65,9 @@
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_spacing"
         android:autoLink="web"
         android:linksClickable="false"
-        android:layout_marginTop="@dimen/common_spacing"
         app:barrierMargin="@dimen/common_spacing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -78,23 +79,25 @@
         android:id="@+id/bar2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierMargin="@dimen/common_spacing"
         app:barrierDirection="bottom"
+        app:barrierMargin="@dimen/common_spacing"
         app:constraint_referenced_ids="content" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/likeIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/bar2"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bar2"
         app:srcCompat="@drawable/ic_like_24" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/shareIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_spacing"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toEndOf="@id/likesText"
         app:layout_constraintTop_toBottomOf="@+id/bar2"
         app:srcCompat="@drawable/ic_share_24" />
@@ -103,6 +106,7 @@
         android:id="@+id/viewIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/viewsText"
         app:layout_constraintEnd_toStartOf="@+id/viewsText"
         app:layout_constraintTop_toTopOf="@+id/viewsText"
@@ -112,26 +116,26 @@
         android:id="@+id/likesText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="10"
         app:layout_constraintBottom_toBottomOf="@+id/likeIcon"
         app:layout_constraintStart_toEndOf="@+id/likeIcon"
-        app:layout_constraintTop_toTopOf="@+id/likeIcon" />
+        app:layout_constraintTop_toTopOf="@+id/likeIcon"
+        tools:text="10" />
 
     <TextView
         android:id="@+id/sharesText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="5"
         app:layout_constraintBottom_toBottomOf="@+id/shareIcon"
         app:layout_constraintStart_toEndOf="@+id/shareIcon"
-        app:layout_constraintTop_toTopOf="@+id/shareIcon" />
+        app:layout_constraintTop_toTopOf="@+id/shareIcon"
+        tools:text="5" />
 
     <TextView
         android:id="@+id/viewsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bar2"
-        app:layout_constraintEnd_toEndOf="parent" />
+        tools:text="5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
