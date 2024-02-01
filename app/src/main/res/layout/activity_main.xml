@@ -35,7 +35,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:text="@string/editing_message"
-        android:textColor="@android:color/system_accent1_400"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/postEditIcon"
         app:layout_constraintTop_toTopOf="@id/postEditIcon" />

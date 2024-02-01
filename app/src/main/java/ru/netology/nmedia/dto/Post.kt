@@ -9,5 +9,4 @@ data class Post(
     val sharesCount: Long = 0,
     val viewsCount: Long = 0,
     val likedByMe: Boolean = false,
-    var isDeleted: Boolean = false
 )
