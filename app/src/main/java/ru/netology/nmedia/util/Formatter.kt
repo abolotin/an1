@@ -15,7 +15,6 @@ fun numberToString(number: Long): String {
 
     val exp = (ln(number.toDouble()) / ln(1000.0)).toInt()
 
-    println(number.toDouble().toString() + ", " + exp.toString())
     df.roundingMode = RoundingMode.FLOOR
     return String.format(
         "%s%c",

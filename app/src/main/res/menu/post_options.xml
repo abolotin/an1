@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id = "@+id/postRemoveMenuItem"
+        android:title = "@string/remove_post_menu_item">
+    </item>
+    <item
+        android:id = "@+id/postEditMenuItem"
+        android:title = "@string/edit_post_menu_item">
+    </item>
+</menu>

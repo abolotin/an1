@@ -26,7 +26,7 @@
         android:maxLines="1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/published"
-        app:layout_constraintEnd_toStartOf="@+id/menu"
+        app:layout_constraintEnd_toStartOf="@+id/menuButton"
         app:layout_constraintStart_toEndOf="@+id/logo"
         app:layout_constraintTop_toTopOf="@+id/logo"
         app:layout_constraintVertical_chainStyle="spread_inside"
@@ -44,7 +44,7 @@
         tools:text="@sample/posts.json/data/published" />
 
     <ImageButton
-        android:id="@+id/menu"
+        android:id="@+id/menuButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
         app:barrierMargin="@dimen/common_spacing"
-        app:constraint_referenced_ids="author,published,menu,logo" />
+        app:constraint_referenced_ids="author,published,menuButton,logo" />
 
     <TextView
         android:id="@+id/content"
