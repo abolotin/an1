@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.AppTheme.ToolButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">@dimen/button_size_square</item>
+        <item name="android:minHeight">@dimen/button_size_square</item>
+    </style>
+    <style name="Widget.AppTheme.LikeCheckBox"
+        parent="Widget.AppTheme.ToolButton">
+        <item name="iconTint">@color/red</item>
+    </style>
+    <style name="Widget.AppTheme.MenuButton"
+        parent="Widget.AppTheme.ToolButton">
+        <item name="android:paddingRight">0dp</item>
+    </style>
+</resources>
