@@ -5,102 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/common_spacing"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/common_spacing"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/postEditIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/card_post" />
 
-    <ImageView
-        android:id="@+id/postEditIcon"
-        android:layout_width="@dimen/button_size_square"
-        android:layout_height="@dimen/button_size_square"
-        android:src="@drawable/ic_pen"
-        android:adjustViewBounds="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list"
-        />
-
-    <TextView
-        android:id="@+id/postEditHead"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/editing_message"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/postEditIcon"
-        app:layout_constraintTop_toTopOf="@id/postEditIcon" />
-
-    <TextView
-        android:id="@+id/postEditPrevText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        app:layout_constraintStart_toEndOf="@id/postEditIcon"
-        app:layout_constraintTop_toBottomOf="@id/postEditHead"
-        tools:text="Previous text" />
-    <ImageButton
-        android:id="@+id/postEditCancelButton"
-        android:layout_width="@dimen/button_size_square"
-        android:layout_height="@dimen/button_size_square"
-        android:src="@drawable/ic_cancel"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/postEditIcon"
-        android:background="@android:color/transparent"
-        />
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/postEditGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/postTextEditor"
-        app:constraint_referenced_ids="postEditIcon,postEditHead,postEditPrevText,postEditCancelButton,postEditBarrier"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/postEditBarrier"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="postEditIcon,postEditHead,postEditPrevText,postEditCancelButton"
-        />
-
-    <EditText
-        android:id="@+id/postTextEditor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text|textMultiLine"
-        android:maxLines="5"
-        app:layout_constraintTop_toTopOf="@id/postSaveButton"
+        android:layout_marginEnd="@dimen/common_spacing"
+        android:layout_marginBottom="@dimen/common_spacing"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/postSaveButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:barrierMargin="@dimen/common_spacing"
-        tools:text="Example text" />
-
-    <ImageButton
-        android:id="@+id/postSaveButton"
-        android:layout_width="@dimen/button_size_square"
-        android:layout_height="@dimen/button_size_square"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/postEditBarrier"
-        app:barrierMargin="@dimen/common_spacing"
-        app:srcCompat="@drawable/ic_ok" />
+        app:srcCompat="@drawable/ic_add_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

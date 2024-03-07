@@ -6,4 +6,8 @@
     <string name="edit_post_menu_item">Изменить</string>
     <string name="empty_content_error">Содержимое не может быть пустым</string>
     <string name="editing_message">Изменение сообщения</string>
+    <string name="error_empty_content">Содержимое не может быть пустым!</string>
+    <string name="intent_chooser_title">Поделиться</string>
+    <string name="edit_post_content_title">Содержимое поста:</string>
+    <string name="edit_post_video_url_title">Ссылка на видео:</string>
 </resources>

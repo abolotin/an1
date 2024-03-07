@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     android:padding="@dimen/common_spacing"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <ImageView
         android:id="@+id/logo"
@@ -76,13 +76,27 @@
         app:layout_constraintTop_toBottomOf="@id/bar1"
         tools:text="@sample/posts.json/data/content" />
 
+    <ImageView
+        android:id="@+id/videoUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_spacing"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:barrierMargin="@dimen/common_spacing"
+        app:layout_constraintTop_toBottomOf="@id/content"
+        app:srcCompat="@drawable/video_logo"
+        tools:layout_editor_absoluteX="16dp"
+        tools:visibility="visible" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/bar2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
         app:barrierMargin="@dimen/common_spacing"
-        app:constraint_referenced_ids="content"
+        app:constraint_referenced_ids="content,videoUrl"
         />
 
     <com.google.android.material.button.MaterialButton
@@ -113,7 +127,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/shareIcon"
         app:layout_constraintTop_toBottomOf="@+id/bar2"
         app:icon="@drawable/ic_views_24" />
 
