@@ -19,9 +19,9 @@ class PostViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
         binding.apply {
-            author.text=post.author
-            published.text=post.published
-            content.text=post.content
+            author.text = post.author
+            published.text = post.published
+            content.text = post.content
             likeIcon.text = numberToString(post.likesCount)
             shareIcon.text = numberToString(post.sharesCount)
             viewIcon.text = numberToString(post.viewsCount)
@@ -32,21 +32,23 @@ class PostViewHolder(
             shareIcon.setOnClickListener {
                 onInteractionListener.onShare(post)
             }
-            if (post.videoUrl.isNotBlank())
-                videoUrl.isVisible = true
+            videoUrl.isVisible = post.videoUrl.isNotBlank()
+
             menuButton.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.post_options)
-                    setOnMenuItemClickListener {item ->
+                    setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             R.id.postRemoveMenuItem -> {
                                 onInteractionListener.onRemove(post)
                                 true
                             }
+
                             R.id.postEditMenuItem -> {
                                 onInteractionListener.onEdit(post)
                                 true
                             }
+
                             else -> false
                         }
                     }
@@ -58,7 +60,7 @@ class PostViewHolder(
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.videoUrl))
                 try {
                     it.context.startActivity(intent)
-                } catch(e: ActivityNotFoundException) {
+                } catch (e: ActivityNotFoundException) {
                     Toast.makeText(it.context, e.localizedMessage, Toast.LENGTH_SHORT)
                         .show()
                 }
