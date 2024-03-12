@@ -19,10 +19,10 @@ object AndroidUtils {
     // HINT: Требуется для получения объекта Window
     // См. коммантарии в View.showTheKeyboardNow()
     fun View.getActivity(ctx: Context?) : Activity? {
-        if (context == null) return null;
-        if (context is Activity) return context as Activity;
-        if (context is ContextWrapper) return getActivity((context as ContextWrapper).getBaseContext());
-        return null;
+        if (context == null) return null
+        if (context is Activity) return context as Activity
+        if (context is ContextWrapper) return getActivity((context as ContextWrapper).baseContext)
+        return null
     }
 
     fun View.showTheKeyboardNow() {

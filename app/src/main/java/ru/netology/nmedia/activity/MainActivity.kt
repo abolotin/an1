@@ -1,21 +1,19 @@
 package ru.netology.nmedia.activity
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
-import androidx.activity.result.launch
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapters.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.util.AndroidUtils.focusAndShowKeyboard
-import ru.netology.nmedia.util.AndroidUtils.hideKeyboard
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +54,26 @@ class MainActivity : AppCompatActivity() {
                 override fun onEdit(post: Post) {
                     editPostLauncher.launch(post)
                 }
+
+                override fun onViewVideo(post: Post) {
+                    if (! post.videoUrl.isNullOrBlank()) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.videoUrl))
+                        try {
+                            startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            Toast.makeText(this@MainActivity, e.localizedMessage, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }
+            }
+        )
+
+        adapter.registerAdapterDataObserver(
+            object : AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    binding.list.smoothScrollToPosition(0)
+                }
             }
         )
 
@@ -66,10 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.data.observe(this) { posts ->
-            val scrollToStart =
-                adapter.currentList.size > 0 && (posts.size != adapter.currentList.size);
             adapter.submitList(posts)
-            if (scrollToStart) binding.list.smoothScrollToPosition(0)
         }
     }
 }

@@ -1,10 +1,6 @@
 package ru.netology.nmedia.adapters
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.net.Uri
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
@@ -54,16 +50,9 @@ class PostViewHolder(
                     }
                 }.show()
             }
-            videoUrl.setOnClickListener() {
-                if (post.videoUrl.isNullOrBlank())
-                    return@setOnClickListener
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.videoUrl))
-                try {
-                    it.context.startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    Toast.makeText(it.context, e.localizedMessage, Toast.LENGTH_SHORT)
-                        .show()
-                }
+
+            videoUrl.setOnClickListener {
+                onInteractionListener.onViewVideo(post)
             }
         }
     }

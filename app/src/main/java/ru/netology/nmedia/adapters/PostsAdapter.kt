@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.dto.Post
