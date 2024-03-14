@@ -54,6 +54,10 @@ class PostViewHolder(
             videoUrl.setOnClickListener {
                 onInteractionListener.onViewVideo(post)
             }
+
+            cardPostView.setOnClickListener {
+                onInteractionListener.onViewPost(post)
+            }
         }
     }
 }

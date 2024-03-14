@@ -3,30 +3,35 @@ package ru.netology.nmedia.activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.PostViewFragment.Companion.postId
 import ru.netology.nmedia.adapters.PostsAdapter
-import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+class FeedFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = FragmentFeedBinding.inflate(
+            inflater,
+            container,
+            false
+        )
 
-        val viewModel: PostViewModel by viewModels()
-
-        val editPostLauncher = registerForActivityResult(EditPostActivityContract) {
-            it ?: return@registerForActivityResult
-            viewModel.savePost(it)
-        }
+        val viewModel: PostViewModel by activityViewModels()
 
         val adapter = PostsAdapter(
             object : PostInteractionListener {
@@ -41,8 +46,10 @@ class MainActivity : AppCompatActivity() {
                         putExtra(Intent.EXTRA_TEXT, post.content)
                     }
 
-                    val chooser = Intent.createChooser(intent,
-                        getString(R.string.intent_chooser_title))
+                    val chooser = Intent.createChooser(
+                        intent,
+                        getString(R.string.intent_chooser_title)
+                    )
                     startActivity(chooser)
                     //viewModel.shareById(post.id)
                 }
@@ -52,25 +59,39 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onEdit(post: Post) {
-                    editPostLauncher.launch(post)
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_postEditFragment,
+                        Bundle().apply {
+                            postId = post.id
+                        }
+                    )
                 }
 
                 override fun onViewVideo(post: Post) {
-                    if (! post.videoUrl.isNullOrBlank()) {
+                    if (post.videoUrl.isNotBlank()) {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.videoUrl))
                         try {
                             startActivity(intent)
                         } catch (e: ActivityNotFoundException) {
-                            Toast.makeText(this@MainActivity, e.localizedMessage, Toast.LENGTH_SHORT)
+                            Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT)
                                 .show()
                         }
                     }
+                }
+
+                override fun onViewPost(post: Post) {
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_postViewFragment,
+                        Bundle().apply {
+                            postId = post.id
+                        }
+                    )
                 }
             }
         )
 
         adapter.registerAdapterDataObserver(
-            object : AdapterDataObserver() {
+            object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     binding.list.smoothScrollToPosition(0)
                 }
@@ -80,11 +101,13 @@ class MainActivity : AppCompatActivity() {
         binding.list.adapter = adapter
 
         binding.add.setOnClickListener {
-            editPostLauncher.launch(viewModel.getNewPost())
+            findNavController().navigate(R.id.action_feedFragment_to_postEditFragment)
         }
 
-        viewModel.data.observe(this) { posts ->
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
             adapter.submitList(posts)
         }
+
+        return binding.root
     }
 }

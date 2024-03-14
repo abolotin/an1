@@ -12,7 +12,7 @@ class PostRepositoryInFileImpl(
 ) : PostRepository {
     private val gson = Gson()
     private val gsonType = TypeToken.getParameterized(List::class.java, Post::class.java).type
-    private var nextId = 0L;
+    private var nextId = 0L
     private var posts = emptyList<Post>()
         set(value) {
             field = value
@@ -31,10 +31,14 @@ class PostRepositoryInFileImpl(
         }
     }
 
-    fun sync() {
+    private fun sync() {
         context.openFileOutput(postsFile, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(posts, gsonType))
         }
+    }
+
+    override fun getById(id: Long): Post? {
+        return posts.firstOrNull { it.id == id }
     }
 
     override fun getAll(): LiveData<List<Post>> = data

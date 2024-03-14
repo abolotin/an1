@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     android:padding="@dimen/common_spacing"
-    tools:context=".activity.MainActivity">
+    android:id = "@+id/card_post_view"
+    tools:context=".activity.AppActivity">
 
     <ImageView
         android:id="@+id/logo"
@@ -44,15 +45,18 @@
         tools:text="@sample/posts.json/data/published" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.AppTheme.MenuButton"
         android:id="@+id/menuButton"
+        style="@style/Widget.AppTheme.MenuButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:maxHeight="@dimen/button_size_square"
         app:barrierMargin="@dimen/common_spacing"
+        app:icon="@drawable/ic_more_vert_24"
+        app:iconGravity="textEnd"
+        app:iconSize="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/logo"
-        app:icon="@drawable/ic_more_vert_24"/>
+        app:layout_constraintTop_toTopOf="@+id/logo" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/bar1"

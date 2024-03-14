@@ -13,11 +13,8 @@
         android:theme="@style/Theme.NMedia"
         tools:targetApi="31" >
         <activity
-            android:name=".activity.EditPostActivity"
+            android:name=".activity.AppActivity"
             android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
-        <activity
-            android:name=".activity.MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
