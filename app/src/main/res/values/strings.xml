@@ -9,6 +9,4 @@
     <string name="intent_chooser_title">Share</string>
     <string name="edit_post_content_title">Post content:</string>
     <string name="edit_post_video_url_title">Video URL:</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
