@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.databinding.FragmentPostEditBinding
@@ -14,6 +15,8 @@ import ru.netology.nmedia.util.LongArg
 class PostEditFragment : Fragment() {
     companion object {
         var Bundle.postId: Long? by LongArg
+        var draftContent: String = ""
+        var draftVideoUrl: String = ""
     }
 
     override fun onCreateView(
@@ -30,8 +33,13 @@ class PostEditFragment : Fragment() {
 
         val post = viewModel.getById(arguments?.postId ?: 0) ?: viewModel.getNewPost()
 
-        binding.postContentEditor.setText(post.content)
-        binding.postVideoUrlEditor.setText(post.videoUrl)
+        if (post.id == 0L) {
+            binding.postContentEditor.setText(draftContent)
+            binding.postVideoUrlEditor.setText(draftVideoUrl)
+        } else {
+            binding.postContentEditor.setText(post.content)
+            binding.postVideoUrlEditor.setText(post.videoUrl)
+        }
 
         binding.ok.setOnClickListener {
             val content = binding.postContentEditor.text.toString()
@@ -45,8 +53,25 @@ class PostEditFragment : Fragment() {
                 )
             }
             // Навигация назад
+            draftContent = ""
+            draftVideoUrl = ""
             findNavController().navigateUp()
         }
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (post.id == 0L) {
+                    with(binding) {
+                        draftContent = postContentEditor.text.toString()
+                        draftVideoUrl = postVideoUrlEditor.text.toString()
+                    }
+                }
+                // default onBackPressed() behavior
+                isEnabled = false
+                activity?.onBackPressedDispatcher?.onBackPressed()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(callback)
 
         return binding.root
     }

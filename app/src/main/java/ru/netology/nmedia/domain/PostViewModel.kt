@@ -3,11 +3,14 @@ package ru.netology.nmedia.domain
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.repository.AppDb
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryInFileImpl
+import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryInFileImpl(application)
+    private val repository: PostRepository = PostRepositorySQLiteImpl(
+        AppDb.getInstance(application).postDao
+    )
     val data = repository.getAll()
 
     fun getById(id: Long) = repository.getById(id)
