@@ -19,12 +19,6 @@ class PostRepositorySQLiteImpl(
         posts = dao.getAll()
     }
 
-    /*private fun sync() {
-        context.openFileOutput(postsFile, Context.MODE_PRIVATE).bufferedWriter().use {
-            it.write(gson.toJson(posts, gsonType))
-        }
-    }*/
-
     override fun getById(id: Long): Post? {
         return posts.firstOrNull { it.id == id }
     }
@@ -37,14 +31,12 @@ class PostRepositorySQLiteImpl(
     }
 
     override fun shareById(id: Long) {
-        /*posts = posts.map {
-            if (it.id == id) {
-                it.copy(sharesCount = it.sharesCount + 1)
-            } else it
-        }*/
+        dao.shareById(id)
+        posts = dao.getAll()
     }
 
     override fun removeById(id: Long) {
+        dao.removeById(id)
         posts = posts.filter { it.id != id }
     }
 
@@ -55,27 +47,5 @@ class PostRepositorySQLiteImpl(
             listOf(saved) + posts
         else
             posts.map { if (it.id == post.id) saved else it }
-
-        /*
-        if (post.id == 0L) {
-            // Новый пост
-            posts = listOf(
-                post.copy(
-                    id = ++nextId,
-                    author = "Me",
-                    content = post.content,
-                    videoUrl = post.videoUrl
-                )
-            ) + posts
-        } else {
-            // Измененный пост
-            posts = posts.map {
-                if (it.id == post.id) it.copy(
-                    content = post.content,
-                    videoUrl = post.videoUrl
-                ) else it
-            }
-        }
-        */
     }
 }
