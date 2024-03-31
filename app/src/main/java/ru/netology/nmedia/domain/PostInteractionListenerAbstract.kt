@@ -15,7 +15,7 @@ abstract class PostInteractionListenerAbstract(
     private val viewModel: PostViewModel
 ) : PostInteractionListener {
     override fun onLike(post: Post) {
-        viewModel.likeById(post.id)
+        viewModel.likeByMe(post.id)
     }
 
     override fun onShare(post: Post) {
@@ -30,7 +30,7 @@ abstract class PostInteractionListenerAbstract(
             getContext()?.getString(R.string.intent_chooser_title)
         )
         getContext()?.startActivity(chooser)
-        //viewModel.shareById(post.id)
+        viewModel.shareById(post.id)
     }
 
     override fun onRemove(post: Post) {

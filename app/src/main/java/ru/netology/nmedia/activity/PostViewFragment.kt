@@ -46,16 +46,10 @@ class PostViewFragment : Fragment() {
         )
 
         arguments?.postId?.let { postId ->
-            viewModel.getById(postId).observe(viewLifecycleOwner) { post ->
-                post?.let { postViewHolder.bind(post) }
+            viewModel.getById(postId)?.let {
+                postViewHolder.bind(it)
             }
         }
-
-        /*viewModel.data.observe(viewLifecycleOwner) { list ->
-            list?.firstOrNull { it.id == arguments?.postId }?.let { post ->
-                postViewHolder.bind(post)
-            }
-        }*/
 
         return binding.root
     }

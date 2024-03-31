@@ -9,13 +9,18 @@ import ru.netology.nmedia.entity.PostEntity
 class PostRepositoryRoomImpl(
     private val dao: PostDao
 ) : PostRepository {
-    override fun getById(id: Long): LiveData<Post?> = dao.getById(id).map {list ->
-        list.firstOrNull { it.id == id }
-    }. map { it?.toDto() }
+    override fun getById(id: Long): Post? {
+        dao.getById(id)?.let {
+            return it.toDto()
+        }
+        return null
+    }
 
     override fun getAll(): LiveData<List<Post>> = dao.getAll().map { list ->
         list.map { it.toDto() }
     }
+
+    override fun likeByMe(id: Long) = dao.likeByMe(id)
 
     override fun likeById(id: Long) = dao.likeById(id)
 

@@ -10,4 +10,10 @@
     <string name="intent_chooser_title">Поделиться</string>
     <string name="edit_post_content_title">Содержимое поста:</string>
     <string name="edit_post_video_url_title">Ссылка на видео:</string>
+    <string name="google_api_unavailable_message">Google API недоступно!</string>
+    <string name="notification_channel_description">Канал уведомлений NMedia</string>
+    <string name="notification_channel_title">Уведомления NMedia</string>
+    <string name="notification_liked_post_title">Понравился пост</string>
+    <string name="notification_liked_post_message">Пользователю %1$s понравился пост от %2$s</string>
+    <string name="notification_new_post_title">%1$s опубликовал новый пост</string>
 </resources>

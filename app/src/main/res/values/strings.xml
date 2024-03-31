@@ -9,4 +9,10 @@
     <string name="intent_chooser_title">Share</string>
     <string name="edit_post_content_title">Post content:</string>
     <string name="edit_post_video_url_title">Video URL:</string>
+    <string name="google_api_unavailable_message">Google API unavailable!</string>
+    <string name="notification_channel_title">NMedia notification</string>
+    <string name="notification_channel_description">NMedia notification channel</string>
+    <string name="notification_liked_post_title">Post liked</string>
+    <string name="notification_liked_post_message">User %1$s likes post of %2$s</string>
+    <string name="notification_new_post_title">%1$s published new post</string>
 </resources>

@@ -7,11 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.databinding.FragmentPostEditBinding
 import ru.netology.nmedia.domain.PostViewModel
-import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.LongArg
 
 class PostEditFragment : Fragment() {
@@ -32,17 +30,8 @@ class PostEditFragment : Fragment() {
         )
 
         val viewModel: PostViewModel by activityViewModels()
-        val postLiveData = MutableLiveData<Post?>()
         val postId = arguments?.postId ?: 0L
-
-        if (postId == 0L) {
-            postLiveData.value = viewModel.getNewPost()
-        } else {
-            viewModel.getById(postId)
-                .observe(viewLifecycleOwner) { post ->
-                    postLiveData.value = post ?: viewModel.getNewPost()
-                }
-        }
+        val post = if (postId == 0L) viewModel.getNewPost() else viewModel.getById(postId)
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -57,35 +46,33 @@ class PostEditFragment : Fragment() {
             }
         }
 
-        postLiveData.observe(viewLifecycleOwner) { post ->
-            if (post == null) {
-                findNavController().navigateUp()
+        if (post == null) {
+            findNavController().navigateUp()
+        } else {
+            if (post.id == 0L) {
+                binding.postContentEditor.setText(draftContent)
+                binding.postVideoUrlEditor.setText(draftVideoUrl)
             } else {
-                if (post.id == 0L) {
-                    binding.postContentEditor.setText(draftContent)
-                    binding.postVideoUrlEditor.setText(draftVideoUrl)
-                } else {
-                    binding.postContentEditor.setText(post.content)
-                    binding.postVideoUrlEditor.setText(post.videoUrl)
-                }
+                binding.postContentEditor.setText(post.content)
+                binding.postVideoUrlEditor.setText(post.videoUrl)
+            }
 
-                binding.ok.setOnClickListener {
-                    val content = binding.postContentEditor.text.toString()
-                    val videoUrl = binding.postVideoUrlEditor.text.toString()
-                    if (content.isNotBlank() || videoUrl.isNotBlank()) {
-                        viewModel.savePost(
-                            post.copy(
-                                content = content,
-                                videoUrl = videoUrl
-                            )
+            binding.ok.setOnClickListener {
+                val content = binding.postContentEditor.text.toString()
+                val videoUrl = binding.postVideoUrlEditor.text.toString()
+                if (content.isNotBlank() || videoUrl.isNotBlank()) {
+                    viewModel.savePost(
+                        post.copy(
+                            content = content,
+                            videoUrl = videoUrl
                         )
-                    }
-                    // Навигация назад
-                    draftContent = ""
-                    draftVideoUrl = ""
-                    callback.isEnabled = false
-                    findNavController().navigateUp()
+                    )
                 }
+                // Навигация назад
+                draftContent = ""
+                draftVideoUrl = ""
+                callback.isEnabled = false
+                findNavController().navigateUp()
             }
         }
 

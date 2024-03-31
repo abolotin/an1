@@ -2,7 +2,6 @@ package ru.netology.nmedia.domain
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.AppDb
 import ru.netology.nmedia.repository.PostRepository
@@ -14,8 +13,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     )
     val data = repository.getAll()
 
-    fun getById(id: Long): LiveData<Post?> = repository.getById(id)
-    fun likeById(id: Long) = repository.likeById(id)
+    fun getById(id: Long): Post? = repository.getById(id)
+
+    fun likeByMe(id: Long) = repository.likeByMe(id)
 
     fun shareById(id: Long) = repository.shareById(id)
 
