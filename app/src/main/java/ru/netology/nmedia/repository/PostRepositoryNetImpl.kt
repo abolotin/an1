@@ -14,7 +14,6 @@ class PostRepositoryNetImpl : PostRepository {
     private val client = OkHttpClient.Builder()
         .callTimeout(5, TimeUnit.SECONDS)
         .build()
-    val contentType = "application/json".toMediaType()
 
     companion object {
         private const val BASE_URL = "http://10.0.2.2:9999"
@@ -42,7 +41,7 @@ class PostRepositoryNetImpl : PostRepository {
     override fun likeByMe(id: Long) {
         val request : Request = Request.Builder()
             .url("$BASE_URL/api/posts/$id/likes")
-            .post("".toRequestBody(contentType))
+            .post("".toRequestBody(jsonType))
             .build()
 
         return client.newCall(request)
@@ -58,7 +57,7 @@ class PostRepositoryNetImpl : PostRepository {
     override fun unlikeByMe(id: Long) {
         val request : Request = Request.Builder()
             .url("$BASE_URL/api/posts/$id/likes")
-            .delete("".toRequestBody(contentType))
+            .delete("".toRequestBody(jsonType))
             .build()
 
         return client.newCall(request)
@@ -82,7 +81,7 @@ class PostRepositoryNetImpl : PostRepository {
     override fun save(post: Post) {
         val request : Request = Request.Builder()
             .url("$BASE_URL/api/posts")
-            .post(Json.encodeToString(post).toRequestBody(contentType))
+            .post(Json.encodeToString(post).toRequestBody(jsonType))
             .build()
 
         return client.newCall(request)

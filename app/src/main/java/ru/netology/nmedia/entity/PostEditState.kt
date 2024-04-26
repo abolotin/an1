@@ -1,7 +1,5 @@
 package ru.netology.nmedia.entity
 
-import ru.netology.nmedia.dto.Post
-
 data class PostEditState(
     val status: Status = Status.OK
 ) {

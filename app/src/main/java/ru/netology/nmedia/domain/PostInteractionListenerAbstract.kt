@@ -4,11 +4,9 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.widget.Toast
 import androidx.navigation.NavController
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.PostViewFragment.Companion.postId
 import ru.netology.nmedia.dto.Post
 
 abstract class PostInteractionListenerAbstract(

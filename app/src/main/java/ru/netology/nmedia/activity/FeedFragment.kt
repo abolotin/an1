@@ -17,7 +17,6 @@ import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.entity.FeedState
 
 class FeedFragment : Fragment() {
     override fun onCreateView(
@@ -71,7 +70,7 @@ class FeedFragment : Fragment() {
             binding.progressBar.isVisible = feedState.isLoading
             binding.errorGroup.isVisible = feedState.isError
             binding.emptyListTitle.isVisible = feedState.isEmpty
-            binding.swiper.isRefreshing = feedState.isLoading;
+            binding.swiper.isRefreshing = feedState.isLoading
             adapter.submitList(feedState.posts)
         }
 
