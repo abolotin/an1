@@ -16,4 +16,8 @@
     <string name="notification_liked_post_title">Понравился пост</string>
     <string name="notification_liked_post_message">Пользователю %1$s понравился пост от %2$s</string>
     <string name="notification_new_post_title">%1$s опубликовал новый пост</string>
+    <string name="feed_loading_error">Во время получения данных произошла ошибка</string>
+    <string name="feed_retry_button">Повторить</string>
+    <string name="empty_posts">Постов нет</string>
+    <string name="edit_saving_error">Во время сохранения поста произошла ошибка</string>
 </resources>

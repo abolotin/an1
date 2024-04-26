@@ -11,7 +11,7 @@ class PostEntity (
     val author: String,
     val content: String,
     val videoUrl: String = "",
-    val published: String,
+    val published: Long,
     val likesCount: Long = 0,
     val sharesCount: Long = 0,
     val viewsCount: Long = 0,
@@ -23,7 +23,7 @@ class PostEntity (
         content = content,
         videoUrl = videoUrl,
         published = published,
-        likesCount = likesCount,
+        likes = likesCount,
         sharesCount = sharesCount,
         viewsCount = viewsCount,
         likedByMe = likedByMe
@@ -36,7 +36,7 @@ class PostEntity (
             content = post.content,
             videoUrl = post.videoUrl,
             published = post.published,
-            likesCount = post.likesCount,
+            likesCount = post.likes,
             sharesCount = post.sharesCount,
             viewsCount = post.viewsCount,
             likedByMe = post.likedByMe

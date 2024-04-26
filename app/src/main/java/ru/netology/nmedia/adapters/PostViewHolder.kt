@@ -8,6 +8,7 @@ import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.numberToString
+import java.util.Date
 
 class PostViewHolder(
     private val binding: CardPostBinding,
@@ -16,9 +17,9 @@ class PostViewHolder(
     fun bind(post: Post) {
         binding.apply {
             author.text = post.author
-            published.text = post.published
+            published.text = Date(post.published*1000L).toString()
             content.text = post.content
-            likeIcon.text = numberToString(post.likesCount)
+            likeIcon.text = numberToString(post.likes)
             shareIcon.text = numberToString(post.sharesCount)
             viewIcon.text = numberToString(post.viewsCount)
             likeIcon.isChecked = post.likedByMe

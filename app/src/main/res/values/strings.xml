@@ -15,4 +15,9 @@
     <string name="notification_liked_post_title">Post liked</string>
     <string name="notification_liked_post_message">User %1$s likes post of %2$s</string>
     <string name="notification_new_post_title">%1$s published new post</string>
+    <string name="feed_loading_error">Error occurred while loading data</string>
+    <string name="feed_retry_button">Retry</string>
+    <string name="edit_saving_error">Error occurred while saving data</string>
+    <string name="edit_error_button" translatable="false">Ok</string>
+    <string name="empty_posts">No posts yet</string>
 </resources>

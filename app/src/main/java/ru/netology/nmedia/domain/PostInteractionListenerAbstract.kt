@@ -14,9 +14,7 @@ import ru.netology.nmedia.dto.Post
 abstract class PostInteractionListenerAbstract(
     private val viewModel: PostViewModel
 ) : PostInteractionListener {
-    override fun onLike(post: Post) {
-        viewModel.likeByMe(post.id)
-    }
+    override fun onLike(post: Post) = viewModel.updateLike(post.id, post.likedByMe)
 
     override fun onShare(post: Post) {
         val intent = Intent().apply {
@@ -38,11 +36,9 @@ abstract class PostInteractionListenerAbstract(
     }
 
     override fun onEdit(post: Post) {
+        viewModel.editedPost = post
         getNavController().navigate(
-            getNavEdit(), // R.id.action_feedFragment_to_postEditFragment,
-            Bundle().apply {
-                postId = post.id
-            }
+            getNavEdit()
         )
     }
 

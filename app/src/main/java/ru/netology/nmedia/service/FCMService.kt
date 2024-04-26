@@ -14,7 +14,8 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.AppDb
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryRoomImpl
+import ru.netology.nmedia.repository.PostRepositoryNetImpl
+import java.util.Date
 import kotlin.random.Random
 
 enum class Action {
@@ -42,9 +43,7 @@ class FCMService : FirebaseMessagingService() {
     private val gson = Gson()
     private val channelId = "nmediaChannel"
 
-    private val repository: PostRepository = PostRepositoryRoomImpl(
-        AppDb.getInstance(this).postDao()
-    )
+    private val repository: PostRepository = PostRepositoryNetImpl()
 
 
     override fun onCreate() {
@@ -85,7 +84,6 @@ class FCMService : FirebaseMessagingService() {
                     )
                 }
             }
-            println("NEW MESSAGE: " + Gson().toJson(message))
         } catch (e: IllegalArgumentException) {
             println("Exception: " + e.message)
         }
@@ -93,7 +91,6 @@ class FCMService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        println("NEW TOKEN: " + token)
     }
 
     @SuppressLint("MissingPermission")
@@ -121,7 +118,7 @@ class FCMService : FirebaseMessagingService() {
     }
 
     private fun handleLike(content: Like) {
-        repository.likeById(content.postId)
+        //repository.likeById(content.postId)
         showNotification(
             getString(R.string.notification_liked_post_title),
             getString(
@@ -138,7 +135,7 @@ class FCMService : FirebaseMessagingService() {
             author = content.author,
             content = content.content,
             videoUrl = content.videoUrl,
-            published = content.published
+            published = Date(content.published).time
         )
         repository.save(post)
         showNotification(
