@@ -12,7 +12,7 @@ import kotlin.RuntimeException
 
 class PostRepositoryNetImpl : PostRepository {
     private val client = OkHttpClient.Builder()
-        .callTimeout(5, TimeUnit.SECONDS)
+        .callTimeout(30, TimeUnit.SECONDS)
         .build()
 
     companion object {
@@ -38,7 +38,7 @@ class PostRepositoryNetImpl : PostRepository {
             }
     }
 
-    override fun likeByMe(id: Long) {
+    override fun likeByMe(id: Long): Post {
         val request : Request = Request.Builder()
             .url("$BASE_URL/api/posts/$id/likes")
             .post("".toRequestBody(jsonType))
@@ -54,10 +54,10 @@ class PostRepositoryNetImpl : PostRepository {
             }
     }
 
-    override fun unlikeByMe(id: Long) {
+    override fun unlikeByMe(id: Long): Post {
         val request : Request = Request.Builder()
             .url("$BASE_URL/api/posts/$id/likes")
-            .delete("".toRequestBody(jsonType))
+            .delete()
             .build()
 
         return client.newCall(request)
@@ -75,7 +75,14 @@ class PostRepositoryNetImpl : PostRepository {
     }
 
     override fun removeById(id: Long) {
-        TODO("Not yet implemented")
+        val request: Request = Request.Builder()
+            .delete()
+            .url("${BASE_URL}/api/posts/$id")
+            .build()
+
+        client.newCall(request)
+            .execute()
+            .close()
     }
 
     override fun save(post: Post) {

@@ -20,6 +20,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit> get() = _postCreated
 
     var editedPost = getNewPost()
+    private var posts : List<Post> = emptyList()
 
     val feedState: LiveData<FeedState>
         get() = _feedState
@@ -32,7 +33,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         thread {
             _feedState.postValue(FeedState(status = FeedState.Status.LOADING))
             try {
-                val posts = repository.getAll()
+                posts = repository.getAll()
                 FeedState(posts = posts, status = FeedState.Status.READY)
             } catch (e: Exception) {
                 FeedState(status = FeedState.Status.ERROR)
@@ -46,9 +47,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         thread {
             _feedState.postValue(FeedState(status = FeedState.Status.LOADING))
             try {
-                if (likedByMe) repository.unlikeByMe(id)
-                else repository.likeByMe(id)
-                val posts = repository.getAll()
+                val post = if (likedByMe) repository.unlikeByMe(id) else repository.likeByMe(id)
+                posts.find { it.id == post.id }?.let {
+                    it.likedByMe = post.likedByMe
+                    it.likes = post.likes
+                }
                 FeedState(posts = posts, status = FeedState.Status.READY)
             } catch (e: Exception) {
                 FeedState(status = FeedState.Status.ERROR)
@@ -58,7 +61,18 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun shareById(id: Long) = repository.shareById(id)
 
-    fun removeById(id: Long) = repository.removeById(id)
+    fun removeById(id: Long) {
+        thread {
+            _feedState.postValue(FeedState(status = FeedState.Status.LOADING))
+            try {
+                repository.removeById(id)
+                posts = posts.filter { it.id != id }
+                FeedState(posts = posts, status = FeedState.Status.READY)
+            } catch (e: Exception) {
+                FeedState(status = FeedState.Status.ERROR)
+            }.also(_feedState::postValue)
+        }
+    }
 
     fun savePost(post: Post) {
         thread {
