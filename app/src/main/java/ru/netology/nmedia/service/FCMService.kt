@@ -136,7 +136,7 @@ class FCMService : FirebaseMessagingService() {
             videoUrl = content.videoUrl,
             published = Date(content.published).time
         )
-        repository.save(post)
+        // repository.saveAsync(post, object: PostRepository.GetPostCallback)
         showNotification(
             getString(
                 R.string.notification_new_post_title,

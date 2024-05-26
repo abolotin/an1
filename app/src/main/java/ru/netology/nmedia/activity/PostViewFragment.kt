@@ -14,6 +14,7 @@ import ru.netology.nmedia.databinding.FragmentPostViewBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.entity.FeedState
 import ru.netology.nmedia.util.LongArg
 
 class PostViewFragment : Fragment() {
@@ -46,8 +47,14 @@ class PostViewFragment : Fragment() {
         )
 
         arguments?.postId?.let { postId ->
-            viewModel.getById(postId)?.let {
-                postViewHolder.bind(it)
+            viewModel.feedState.observe(viewLifecycleOwner) {feedState ->
+                feedState?.let {
+                    if (it.status == FeedState.Status.READY) {
+                        viewModel.getById(postId)?.let {post ->
+                            postViewHolder.bind(post)
+                        }
+                    }
+                }
             }
         }
 

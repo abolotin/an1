@@ -1,6 +1,8 @@
 package ru.netology.nmedia.domain
 
+import android.app.PendingIntent
 import android.content.ActivityNotFoundException
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -26,6 +28,7 @@ abstract class PostInteractionListenerAbstract(
             getContext()?.getString(R.string.intent_chooser_title)
         )
         getContext()?.startActivity(chooser)
+        // Каким образом получить результат шаринга???
         viewModel.shareById(post.id)
     }
 
