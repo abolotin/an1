@@ -2,11 +2,11 @@ package ru.netology.nmedia.activity
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +17,7 @@ import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
+
 
 class FeedFragment : Fragment() {
     override fun onCreateView(
