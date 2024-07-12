@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.dto.Post
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -20,15 +21,14 @@ class PostRepositoryNetImpl : PostRepository {
         .build()
 
     companion object {
-        private const val BASE_URL = "http://10.0.2.2:9999"
         private val jsonType = "application/json".toMediaType()
 
-        fun getUrl() = BASE_URL
+        fun getUrl() = BuildConfig.BASE_URL
     }
 
     override fun getAllAsync(callback: PostRepository.GetPostsCallback) {
         val request : Request = Request.Builder()
-            .url("$BASE_URL/api/posts")
+            .url("${BuildConfig.BASE_URL}/api/posts")
             .build()
 
         client.newCall(request)
@@ -49,16 +49,18 @@ class PostRepositoryNetImpl : PostRepository {
 
     override fun likeByMeAsync(id: Long, callback: PostRepository.GetPostCallback) =
         updatePost(
+            id,
             Request.Builder()
-                .url("$BASE_URL/api/posts/$id/likes")
+                .url("${BuildConfig.BASE_URL}/api/posts/$id/likes")
                 .post("".toRequestBody(PostRepositoryNetImpl.jsonType)),
             callback
         )
 
     override fun unlikeByMeAsync(id: Long, callback: PostRepository.GetPostCallback) =
         updatePost(
+            id,
             Request.Builder()
-                .url("$BASE_URL/api/posts/$id/likes")
+                .url("${BuildConfig.BASE_URL}/api/posts/$id/likes")
                 .delete(),
             callback
         )
@@ -66,7 +68,7 @@ class PostRepositoryNetImpl : PostRepository {
     override fun removeByIdAsync(id: Long, callback: PostRepository.RemovePostCallback) {
         val request: Request = Request.Builder()
             .delete()
-            .url("${BASE_URL}/api/posts/$id")
+            .url("${BuildConfig.BASE_URL}/api/posts/$id")
             .build()
 
         client.newCall(request)
@@ -84,26 +86,27 @@ class PostRepositoryNetImpl : PostRepository {
 
     override fun saveAsync(post: Post, callback: PostRepository.GetPostCallback) =
         updatePost(
+            post.id,
             Request.Builder()
-                .url("$BASE_URL/api/posts")
+                .url("${BuildConfig.BASE_URL}/api/posts")
                 .post(Json.encodeToString(post).toRequestBody(jsonType)),
             callback
         )
 
-    private fun updatePost(requestBuilder: Request.Builder, callback: PostRepository.GetPostCallback) {
+    private fun updatePost(postId: Long, requestBuilder: Request.Builder, callback: PostRepository.GetPostCallback) {
         val request = requestBuilder.build()
 
         client.newCall(request)
             .enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    callback.onError(e)
+                    callback.onError(e, postId)
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     try {
                         callback.onSuccess(Json.decodeFromString<Post>(response.body?.string() ?: throw RuntimeException("Body is empty")))
                     } catch (e: Exception) {
-                        callback.onError(e)
+                        callback.onError(e, postId)
                     }
                 }
             })

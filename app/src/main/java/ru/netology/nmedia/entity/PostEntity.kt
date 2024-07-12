@@ -10,7 +10,7 @@ class PostEntity (
     val id: Long,
     val author: String,
     val content: String,
-    val videoUrl: String = "",
+    val videoUrl: String? = "",
     val published: Long,
     val likesCount: Long = 0,
     val sharesCount: Long = 0,

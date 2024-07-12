@@ -44,7 +44,7 @@ abstract class PostInteractionListenerAbstract(
     }
 
     override fun onViewVideo(post: Post) {
-        if (post.videoUrl.isNotBlank()) {
+        if (post.videoUrl?.isNotBlank() == true) {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.videoUrl))
             try {
                 getContext()?.startActivity(intent)

@@ -128,7 +128,7 @@
         app:icon="@drawable/ic_like_24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bar2"
-        />
+        app:toggleCheckedStateOnClick="false" />
 
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.AppTheme.ToolButton"

@@ -18,7 +18,7 @@ interface PostDao {
     fun insert(post: PostEntity)
 
     @Query("UPDATE PostEntity SET content = :content, videoUrl = :videoUrl WHERE id = :id")
-    fun updateById(id: Long, content: String, videoUrl: String)
+    fun updateById(id: Long, content: String, videoUrl: String?)
 
     fun save(post: PostEntity) = if (post.id == 0L) insert(post) else updateById(post.id, post.content, post.videoUrl)
 

@@ -10,20 +10,20 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.FeedState
 import ru.netology.nmedia.entity.PostEditState
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryNetImpl
+import ru.netology.nmedia.repository.PostRepositoryRetrofitImpl
 import kotlin.concurrent.thread
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryNetImpl()
+    private val repository: PostRepository = PostRepositoryRetrofitImpl()
     private val _feedState = MutableLiveData(FeedState())
-    private val _postCreated = SingleLiveEvent<Unit>()
+    private val _postSaved = SingleLiveEvent<Post>()
     private val updatePostCallback = object: PostRepository.GetPostCallback {
-        override fun onError(e: Exception) = this@PostViewModel.onError(e)
+        override fun onError(e: Exception, postId: Long) = this@PostViewModel.onError(e, postId)
         override fun onSuccess(loadedPost: Post) = updatePostItem(loadedPost)
     }
 
     val editState = MutableLiveData(PostEditState(status = PostEditState.Status.OK))
-    val postCreated: LiveData<Unit> get() = _postCreated
+    val postSaved: LiveData<Post> get() = _postSaved
 
     var editedPost = getNewPost()
     private var posts: List<Post> = emptyList()
@@ -38,7 +38,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun loadPosts() {
         _feedState.postValue(FeedState(status = FeedState.Status.LOADING))
         repository.getAllAsync(object : PostRepository.GetPostsCallback {
-            override fun onError(e: Exception) = this@PostViewModel.onError(e)
+            override fun onError(e: Exception) = this@PostViewModel.onError(e, null)
 
             override fun onSuccess(loadedPosts: List<Post>) {
                 posts = loadedPosts
@@ -82,11 +82,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun savePost(post: Post) {
         editState.postValue(PostEditState(status = PostEditState.Status.SAVING))
         repository.saveAsync(post, object: PostRepository.GetPostCallback {
-            override fun onError(e: Exception) {
+            override fun onError(e: Exception, postId: Long) {
                 editState.postValue(PostEditState(status = PostEditState.Status.ERROR))
             }
             override fun onSuccess(loadedPost: Post) {
-                _postCreated.postValue(Unit)
+                _postSaved.postValue(loadedPost)
                 editState.postValue(PostEditState(status = PostEditState.Status.OK))
             }
         })
@@ -99,12 +99,21 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         published = 0
     )
 
-    private fun onError(e: Exception) {
-        _feedState.postValue(FeedState(status = FeedState.Status.ERROR))
+    private fun onError(e: Exception, postId: Long?) {
+        postId?.let{post ->
+            getById(postId)?.let {
+                posts = posts.map { if (it.id == postId) it.copy() else it }
+            }
+        }
+        _feedState.postValue(FeedState(posts = posts, status = FeedState.Status.ERROR))
     }
 
-    private fun updatePostItem(post: Post) {
-        posts = posts.map { if (it.id == post.id) post.copy() else it }
-        _feedState.postValue(FeedState(posts = posts, status = FeedState.Status.READY))
+    fun updatePostItem(post: Post) {
+        if (getById(post.id) == null) {
+            loadPosts()
+        } else {
+            posts = posts.map { if (it.id == post.id) post.copy() else it }
+            _feedState.postValue(FeedState(posts = posts, status = FeedState.Status.READY))
+        }
     }
 }

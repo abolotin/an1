@@ -12,6 +12,7 @@ data class FeedState(
         ERROR
     }
 
+    val isReady get() = status == Status.READY
     val isLoading get() = status == Status.LOADING
     val isError get() = status == Status.ERROR
     val isEmpty get() = posts.isEmpty() && (status == Status.READY)

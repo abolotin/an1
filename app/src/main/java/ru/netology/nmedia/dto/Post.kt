@@ -8,7 +8,7 @@ data class Post(
     val author: String,
     val authorAvatar: String? = null,
     val content: String,
-    val videoUrl: String = "",
+    val videoUrl: String? = "",
     val published: Long,
     var likes: Long = 0,
     var sharesCount: Long = 0,

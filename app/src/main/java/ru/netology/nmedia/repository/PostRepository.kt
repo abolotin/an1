@@ -16,7 +16,7 @@ interface PostRepository {
 
     interface GetPostCallback {
         fun onSuccess(loadedPost: Post) {}
-        fun onError(e: Exception) {}
+        fun onError(e: Exception, postId: Long) {}
     }
 
     interface RemovePostCallback {

@@ -9,6 +9,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentPostEditBinding
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.entity.PostEditState
@@ -16,7 +18,6 @@ import ru.netology.nmedia.util.LongArg
 
 class PostEditFragment : Fragment() {
     companion object {
-        var Bundle.postId: Long? by LongArg
         var draftContent: String = ""
         var draftVideoUrl: String = ""
     }
@@ -68,27 +69,30 @@ class PostEditFragment : Fragment() {
             }
         }
 
-        binding.errorOkButton.setOnClickListener {
-            viewModel.editState.postValue(PostEditState(status = PostEditState.Status.OK))
-        }
-
-        viewModel.postCreated.observe(viewLifecycleOwner) {
+        viewModel.postSaved.observe(viewLifecycleOwner) {
             // Навигация назад
             draftContent = ""
             draftVideoUrl = ""
             callback.isEnabled = false
-            viewModel.loadPosts()
+            // viewModel.loadPosts()
+            viewModel.updatePostItem(it)
             findNavController().navigateUp()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(callback)
 
         viewModel.editState.observe(viewLifecycleOwner) {
-            binding.errorGroup.isVisible = it.isError
             binding.progressBar.isVisible = it.isSaving
-            binding.ok.isEnabled = it.isOk
-            binding.postContentEditor.isEnabled = it.isOk
-            binding.postVideoUrlEditor.isEnabled = it.isOk
+            binding.ok.isEnabled = !it.isSaving
+            binding.postContentEditor.isEnabled = !it.isSaving
+            binding.postVideoUrlEditor.isEnabled = !it.isSaving
+            if (it.isError) {
+                Snackbar.make(binding.root, R.string.edit_saving_error, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry_button) {
+                        binding.ok.performClick()
+                    }
+                    .show()
+            }
         }
 
         return binding.root

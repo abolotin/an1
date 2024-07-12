@@ -13,7 +13,7 @@ import com.google.gson.Gson
 import ru.netology.nmedia.R
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryNetImpl
+import ru.netology.nmedia.repository.PostRepositoryRetrofitImpl
 import java.util.Date
 import kotlin.random.Random
 
@@ -42,7 +42,7 @@ class FCMService : FirebaseMessagingService() {
     private val gson = Gson()
     private val channelId = "nmediaChannel"
 
-    private val repository: PostRepository = PostRepositoryNetImpl()
+    private val repository: PostRepository = PostRepositoryRetrofitImpl()
 
 
     override fun onCreate() {

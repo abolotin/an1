@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.repository.PostRepositoryNetImpl
+import ru.netology.nmedia.repository.PostRepositoryRetrofitImpl
 import ru.netology.nmedia.util.numberToString
 import java.util.Date
 
@@ -25,7 +26,7 @@ class PostViewHolder(
             post.authorAvatar?.let {
                 if (it.isNotEmpty()) {
                     Glide.with(binding.root)
-                        .load(PostRepositoryNetImpl.getUrl()+"/avatars/$it")
+                        .load(BuildConfig.BASE_URL + "avatars/$it")
                         .timeout(10000)
                         .placeholder(R.drawable.ic_loading_100dp)
                         .error(R.drawable.ic_error_100dp)
@@ -33,28 +34,30 @@ class PostViewHolder(
                         .into(logo)
                 }
             }
-            post.attachment?.let {attach ->
+            post.attachment?.let { attach ->
                 attachment.isVisible = true
                 Glide.with(binding.root)
-                    .load(PostRepositoryNetImpl.getUrl()+"/images/${attach.url}")
+                    .load(BuildConfig.BASE_URL + "images/${attach.url}")
                     .timeout(10000)
                     .placeholder(R.drawable.ic_loading_100dp)
                     .error(R.drawable.ic_error_100dp)
                     .into(attachment)
             }
-            published.text = Date(post.published*1000L).toString()
+            published.text = Date(post.published * 1000L).toString()
             content.text = post.content
             likeIcon.text = numberToString(post.likes)
             shareIcon.text = numberToString(post.sharesCount)
             viewIcon.text = numberToString(post.viewsCount)
             likeIcon.isChecked = post.likedByMe
+            likeIcon.isEnabled = true
             likeIcon.setOnClickListener {
+                likeIcon.isEnabled = false
                 onInteractionListener.onLike(post)
             }
             shareIcon.setOnClickListener {
                 onInteractionListener.onShare(post)
             }
-            videoUrl.isVisible = post.videoUrl.isNotBlank()
+            videoUrl.isVisible = post.videoUrl?.isNotBlank() == true
 
             menuButton.setOnClickListener {
                 PopupMenu(it.context, it).apply {
