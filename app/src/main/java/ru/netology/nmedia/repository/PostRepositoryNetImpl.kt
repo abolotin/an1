@@ -1,3 +1,4 @@
+/*
 package ru.netology.nmedia.repository
 
 import kotlinx.serialization.encodeToString
@@ -112,3 +113,4 @@ class PostRepositoryNetImpl : PostRepository {
             })
     }
 }
+*/

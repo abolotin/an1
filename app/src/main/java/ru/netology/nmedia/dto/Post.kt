@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Post(
     val id: Long,
+    val localId: Long = 0L,
     val author: String,
     val authorAvatar: String? = null,
     val content: String,
@@ -16,6 +17,8 @@ data class Post(
     var likedByMe: Boolean = false,
     var attachment: Attachment? = null
 ) {
+    val isSaved: Boolean
+        get() = (localId == 0L)
     @Serializable
     data class Attachment(
         var url: String,

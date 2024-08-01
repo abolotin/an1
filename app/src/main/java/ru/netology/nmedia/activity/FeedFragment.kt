@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PostViewFragment.Companion.postId
+import ru.netology.nmedia.activity.PostViewFragment.Companion.postLocalId
 import ru.netology.nmedia.adapters.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
@@ -43,6 +44,7 @@ class FeedFragment : Fragment() {
                         R.id.action_feedFragment_to_postViewFragment,
                         Bundle().apply {
                             postId = post.id
+                            postLocalId = post.localId
                         }
                     )
                 }
@@ -64,10 +66,13 @@ class FeedFragment : Fragment() {
             findNavController().navigate(R.id.action_feedFragment_to_postEditFragment)
         }
 
-        viewModel.feedState.observe(viewLifecycleOwner) { feedState ->
-            binding.emptyListTitle.isVisible = feedState.isEmpty
+        viewModel.data.observe(viewLifecycleOwner) { dataState ->
+            binding.emptyListTitle.isVisible = dataState.isEmpty
+            adapter.submitList(dataState.posts)
+        }
+
+        viewModel.dataState.observe(viewLifecycleOwner) { feedState ->
             binding.swiper.isRefreshing = feedState.isLoading
-            if (feedState.isReady) adapter.submitList(feedState.posts)
             if (feedState.isError) {
                 Snackbar.make(binding.root, R.string.feed_loading_error, Snackbar.LENGTH_LONG)
                     .setAction(R.string.retry_button) {

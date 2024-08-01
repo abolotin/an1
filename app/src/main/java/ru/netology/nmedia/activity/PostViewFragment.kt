@@ -14,12 +14,12 @@ import ru.netology.nmedia.databinding.FragmentPostViewBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.entity.FeedState
 import ru.netology.nmedia.util.LongArg
 
 class PostViewFragment : Fragment() {
     companion object {
         var Bundle.postId: Long? by LongArg
+        var Bundle.postLocalId: Long? by LongArg
     }
 
     override fun onCreateView(
@@ -47,13 +47,10 @@ class PostViewFragment : Fragment() {
         )
 
         arguments?.postId?.let { postId ->
-            viewModel.feedState.observe(viewLifecycleOwner) {feedState ->
-                feedState?.let {
-                    if (it.status == FeedState.Status.READY) {
-                        viewModel.getById(postId)?.let {post ->
-                            postViewHolder.bind(post)
-                        }
-                    }
+            arguments?.postLocalId?.let { localId ->
+                viewModel.data.observe(viewLifecycleOwner) { data ->
+                    data.posts.filter { it.id == postId && it.localId == localId }.firstOrNull()
+                        ?.let { postViewHolder.bind(it) }
                 }
             }
         }

@@ -11,7 +11,6 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.repository.PostRepositoryRetrofitImpl
 import ru.netology.nmedia.util.numberToString
 import java.util.Date
 
@@ -47,9 +46,11 @@ class PostViewHolder(
             content.text = post.content
             likeIcon.text = numberToString(post.likes)
             shareIcon.text = numberToString(post.sharesCount)
+            shareIcon.isEnabled = post.isSaved
             viewIcon.text = numberToString(post.viewsCount)
+            viewIcon.isEnabled = post.isSaved
             likeIcon.isChecked = post.likedByMe
-            likeIcon.isEnabled = true
+            likeIcon.isEnabled = post.isSaved
             likeIcon.setOnClickListener {
                 likeIcon.isEnabled = false
                 onInteractionListener.onLike(post)

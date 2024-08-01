@@ -1,9 +1,8 @@
 package ru.netology.nmedia.api
 
-import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -18,26 +17,26 @@ private val okHttpClient = OkHttpClient.Builder()
     .build()
 
 private val retrofit = Retrofit.Builder()
-    .baseUrl(BuildConfig.BASE_URL + "api/slow/")
+    .baseUrl(BuildConfig.BASE_URL + "api/")
     .client(okHttpClient)
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
 interface PostsApi {
     @GET("posts")
-    fun getAll(): Call<List<Post>>
+    suspend fun getAll(): Response<List<Post>>
 
     @POST("posts/{id}/likes")
-    fun likeByMe(@Path("id") id: Long): Call<Post>
+    suspend fun likeByMe(@Path("id") id: Long): Response<Post>
 
     @DELETE("posts/{id}/likes")
-    fun unlikeByMe(@Path("id") id: Long): Call<Post>
+    suspend fun unlikeByMe(@Path("id") id: Long): Response<Post>
 
     @DELETE("posts/{id}")
-    fun removeById(@Path("id") id: Long): Call<Unit>
+    suspend fun removeById(@Path("id") id: Long): Response<Unit>
 
     @POST("posts")
-    fun save(@Body post: Post): Call<Post>
+    suspend fun save(@Body post: Post): Response<Post>
 }
 
 object PostsApiImpl {

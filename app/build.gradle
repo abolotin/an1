@@ -62,6 +62,7 @@ dependencies {
     def firebase_version = "32.8.0"
     def playservicesbase_version="18.4.0"
     def kotlin_json_version = "1.6.3"
+    def kotlin_coroutines_version = "1.8.1"
     def swiperefreshlayout_version = "1.1.0"
     def glide_version = "4.16.0"
     def retrofit_version = "2.11.0"
@@ -79,6 +80,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
     implementation platform("com.google.firebase:firebase-bom:$firebase_version")
     implementation "com.google.firebase:firebase-messaging-ktx"
     implementation "com.google.android.gms:play-services-base:$playservicesbase_version"
@@ -86,6 +88,7 @@ dependencies {
     implementation "com.google.android.material:material:$mdc_version"
     implementation "com.google.code.gson:gson:$gson_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_json_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayout_version"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

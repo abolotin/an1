@@ -6,15 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
-import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentPostEditBinding
 import ru.netology.nmedia.domain.PostViewModel
-import ru.netology.nmedia.entity.PostEditState
-import ru.netology.nmedia.util.LongArg
+import ru.netology.nmedia.entity.PostEntity
 
 class PostEditFragment : Fragment() {
     companion object {
@@ -48,7 +44,7 @@ class PostEditFragment : Fragment() {
             }
         }
 
-        if (post.id == 0L) {
+        if (post.id == 0L && post.localId == 0L) {
             binding.postContentEditor.setText(draftContent)
             binding.postVideoUrlEditor.setText(draftVideoUrl)
         } else {
@@ -62,38 +58,20 @@ class PostEditFragment : Fragment() {
             if (content.isNotBlank() || videoUrl.isNotBlank()) {
                 viewModel.savePost(
                     post.copy(
+                        localId = if (post.localId == 0L) PostEntity.nextLocalId else post.localId,
                         content = content,
                         videoUrl = videoUrl
                     )
                 )
+                // Навигация назад
+                draftContent = ""
+                draftVideoUrl = ""
+                callback.isEnabled = false
+                findNavController().navigateUp()
             }
-        }
-
-        viewModel.postSaved.observe(viewLifecycleOwner) {
-            // Навигация назад
-            draftContent = ""
-            draftVideoUrl = ""
-            callback.isEnabled = false
-            // viewModel.loadPosts()
-            viewModel.updatePostItem(it)
-            findNavController().navigateUp()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(callback)
-
-        viewModel.editState.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it.isSaving
-            binding.ok.isEnabled = !it.isSaving
-            binding.postContentEditor.isEnabled = !it.isSaving
-            binding.postVideoUrlEditor.isEnabled = !it.isSaving
-            if (it.isError) {
-                Snackbar.make(binding.root, R.string.edit_saving_error, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.retry_button) {
-                        binding.ok.performClick()
-                    }
-                    .show()
-            }
-        }
 
         return binding.root
     }

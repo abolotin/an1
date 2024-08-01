@@ -1,8 +1,6 @@
 package ru.netology.nmedia.domain
 
-import android.app.PendingIntent
 import android.content.ActivityNotFoundException
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -33,7 +31,7 @@ abstract class PostInteractionListenerAbstract(
     }
 
     override fun onRemove(post: Post) {
-        viewModel.removeById(post.id)
+        viewModel.removePost(post.id, post.localId)
     }
 
     override fun onEdit(post: Post) {
