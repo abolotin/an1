@@ -84,7 +84,7 @@ class FeedFragment : Fragment() {
 
         viewModel.newerCount.observe(viewLifecycleOwner) {count ->
             binding.newPostsButton.isVisible = count > 0
-            binding.newPostsButton.text = getString(R.string.new_posts_message, count)
+            binding.newPostsButton.text = getString(R.string.new_posts_message, count.toString())
         }
 
         binding.newPostsButton.setOnClickListener {
