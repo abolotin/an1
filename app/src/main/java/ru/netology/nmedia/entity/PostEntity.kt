@@ -1,5 +1,6 @@
 package ru.netology.nmedia.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import ru.netology.nmedia.dto.Post
 
@@ -16,25 +17,29 @@ class PostEntity(
     val viewsCount: Long = 0,
     var likedByMe: Boolean = false,
     var localState: Int = 0,
+    var localIsNew: Boolean? = null
 ) {
     val isOk: Boolean
         get() = localState == STATE_OK
     var isDeleted: Boolean
         get() = (localState and STATE_DELETED) != 0
         set(value: Boolean) {
-            localState = if (value) localState or STATE_DELETED else localState and STATE_DELETED.inv()
+            localState =
+                if (value) localState or STATE_DELETED else localState and STATE_DELETED.inv()
         }
 
     var isUnsaved: Boolean
         get() = (localState and STATE_UNSAVED) != 0
         set(value: Boolean) {
-            localState = if (value) localState or STATE_UNSAVED else localState and STATE_UNSAVED.inv()
+            localState =
+                if (value) localState or STATE_UNSAVED else localState and STATE_UNSAVED.inv()
         }
 
     var isLikeUpdated: Boolean
         get() = (localState and STATE_LIKE_UPDATED) != 0
         set(value: Boolean) {
-            localState = if (value) localState or STATE_LIKE_UPDATED else localState and STATE_LIKE_UPDATED.inv()
+            localState =
+                if (value) localState or STATE_LIKE_UPDATED else localState and STATE_LIKE_UPDATED.inv()
         }
 
     val isUpdated: Boolean
@@ -85,3 +90,8 @@ class PostEntity(
 
 fun List<PostEntity>.toDto() = map(PostEntity::toDto)
 fun List<Post>.toEntity() = map(PostEntity::fromDto)
+fun List<Post>.toNewEntity() = map {
+    val entity = PostEntity.fromDto(it)
+    entity.localIsNew = true
+    entity
+}

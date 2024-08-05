@@ -45,5 +45,16 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
+        <Button
+            android:id="@+id/newPostsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="New posts: 10"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

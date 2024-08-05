@@ -20,4 +20,5 @@
     <string name="retry_button">Повторить</string>
     <string name="empty_posts">Постов нет</string>
     <string name="edit_saving_error">Во время сохранения поста произошла ошибка</string>
+    <string name="new_posts_message">Новые сообщения: %1$s</string>
 </resources>

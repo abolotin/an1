@@ -1,30 +1,48 @@
 package ru.netology.nmedia.repository
 
+import android.database.SQLException
 import androidx.lifecycle.map
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.api.PostsApiImpl
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toDto
 import ru.netology.nmedia.entity.toEntity
+import ru.netology.nmedia.entity.toNewEntity
 import ru.netology.nmedia.errors.ApiError
+import ru.netology.nmedia.errors.AppErrors
+import ru.netology.nmedia.errors.DatabaseError
 import ru.netology.nmedia.errors.NetworkError
 import ru.netology.nmedia.errors.UnknownError
 import java.io.IOException
+import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
-    override val data = postDao.getAll().map { entityList ->
-        val updatedList = entityList.filter { it.isUpdated }
-        val removedList = entityList.filter { it.isDeleted }
-        saveOnServer(updatedList)
-        removeOnServer(removedList)
-        entityList.filter {
-            !it.isDeleted
-        }.toDto()
-    }
+    override val data = postDao.getAll()
+        .flowOn(Dispatchers.Default)
+        .map { entityList ->
+            val updatedList = entityList.filter { it.isUpdated }
+            val removedList = entityList.filter { it.isDeleted }
+            saveOnServer(updatedList)
+            removeOnServer(removedList)
+            entityList.filter {
+                !it.isDeleted && !(it.localIsNew ?: false)
+            }
+                .toDto()
+        }
 
     override suspend fun getAll() {
         try {
@@ -97,6 +115,7 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
             postEntity = PostEntity.fromDto(post)
             postEntity.isUnsaved = true
             postDao.insert(postEntity)
+            if (post.id !== 0L) setAllViewed()
         } catch (e: Exception) {
             // Ошибка конвертации или сохранения в БД
             throw UnknownError
@@ -161,7 +180,7 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
 
     private suspend fun likeOnServer(post: PostEntity) {
         if (post.id == 0L)
-            // Нельзя лайкнуть несохранённый пост
+        // Нельзя лайкнуть несохранённый пост
             return
 
         try {
@@ -181,6 +200,43 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
             throw e
         } catch (e: IOException) {
             throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+
+    override fun getNewerCount(id: Long): Flow<Int> = flow {
+        while (true) {
+            delay(10_000L)
+            try {
+                val response = PostsApiImpl.retrofitService.getNewer(id)
+
+                if (!response.isSuccessful)
+                    throw ApiError(response.code(), response.message())
+
+                val body = response.body() ?: throw ApiError(response.code(), response.message())
+                val entities = body.toNewEntity()
+                postDao.insert(entities)
+                emit(entities.size)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: ApiError) {
+                throw e
+            } catch (e: IOException) {
+                throw NetworkError
+            } catch (e: Exception) {
+                throw UnknownError
+            }
+        }
+    }
+        .catch { e -> throw AppErrors.from(e) }
+        .flowOn(Dispatchers.Default)
+
+    override suspend fun setAllViewed() {
+        try {
+            postDao.setAllViewed()
+        } catch (e: SQLException) {
+            throw DatabaseError
         } catch (e: Exception) {
             throw UnknownError
         }
