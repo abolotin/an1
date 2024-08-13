@@ -43,6 +43,15 @@ class PostViewFragment : Fragment() {
                     super.onRemove(post)
                     findNavController().navigateUp()
                 }
+                override fun onViewPhoto(post: Post) {
+                    findNavController().navigate(
+                        R.id.action_postViewFragment_to_photoViewFragment,
+                        Bundle().apply {
+                            postId = post.id
+                            postLocalId = post.localId
+                        }
+                    )
+                }
             }
         )
 

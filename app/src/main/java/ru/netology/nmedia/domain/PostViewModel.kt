@@ -1,6 +1,7 @@
 package ru.netology.nmedia.domain
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,11 +22,13 @@ import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.FeedModel
 import ru.netology.nmedia.entity.FeedState
+import ru.netology.nmedia.entity.PhotoModel
 import ru.netology.nmedia.entity.PostEditState
 import ru.netology.nmedia.errors.NetworkError
 import ru.netology.nmedia.repository.AppDb
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
+import java.io.File
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryImpl(
@@ -39,6 +42,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             e.printStackTrace()
         }
         .asLiveData(Dispatchers.Default)
+    private val emptyPhoto = PhotoModel()
+    val _photo = MutableLiveData(emptyPhoto)
+    val photo : LiveData<PhotoModel>
+        get() = _photo
 
     val _dataState = MutableLiveData(FeedState())
     val dataState: LiveData<FeedState>
@@ -124,7 +131,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _dataState.postValue(FeedState(status = FeedState.Status.LOADING))
             try {
-                repository.save(post);
+                repository.save(post, photo.value);
                 _dataState.postValue(FeedState(status = FeedState.Status.READY))
             } catch (e: NetworkError) {
                 _dataState.postValue(FeedState(status = FeedState.Status.ERROR))
@@ -132,6 +139,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 _dataState.postValue(FeedState(status = FeedState.Status.ERROR))
             }
         }
+    }
+
+    fun updatePhoto(uri: Uri?, file: File?) {
+        _photo.postValue(PhotoModel(uri, file))
     }
 
     fun setAllViewed() {

@@ -30,3 +30,7 @@ data class Post(
         }
     }
 }
+
+data class Media(
+    val id: String
+)

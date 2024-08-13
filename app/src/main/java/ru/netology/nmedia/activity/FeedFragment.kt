@@ -48,6 +48,15 @@ class FeedFragment : Fragment() {
                         }
                     )
                 }
+                override fun onViewPhoto(post: Post) {
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_photoViewFragment,
+                        Bundle().apply {
+                            postId = post.id
+                            postLocalId = post.localId
+                        }
+                    )
+                }
             }
         )
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/likeIcon"
+        android:scaleType="fitCenter"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/likeIcon"
+        style="@style/Widget.AppTheme.LikeCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:checkable="true"
+        app:icon="@drawable/ic_like_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:toggleCheckedStateOnClick="false" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.AppTheme.ToolButton"
+        android:id="@+id/shareIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toEndOf="@id/likeIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:icon="@drawable/ic_share_24" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.AppTheme.ToolButton"
+        android:id="@+id/viewIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toEndOf="@+id/shareIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:icon="@drawable/ic_views_24" />
+</androidx.constraintlayout.widget.ConstraintLayout>

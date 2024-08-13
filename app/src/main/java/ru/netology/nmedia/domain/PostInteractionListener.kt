@@ -9,4 +9,5 @@ interface PostInteractionListener {
     fun onEdit(post: Post) {}
     fun onViewVideo(post: Post) {}
     fun onViewPost(post: Post) {}
+    fun onViewPhoto(post: Post) {}
 }

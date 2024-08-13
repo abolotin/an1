@@ -1,6 +1,7 @@
 package ru.netology.nmedia.entity
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import ru.netology.nmedia.dto.Post
 
@@ -17,7 +18,9 @@ class PostEntity(
     val viewsCount: Long = 0,
     var likedByMe: Boolean = false,
     var localState: Int = 0,
-    var localIsNew: Boolean? = null
+    var localIsNew: Boolean? = null,
+    @Embedded(prefix = "attachment_")
+    var attachment: AttachmentEmbeddable?
 ) {
     val isOk: Boolean
         get() = localState == STATE_OK
@@ -70,7 +73,8 @@ class PostEntity(
             likesCount = post.likes,
             sharesCount = post.sharesCount,
             viewsCount = post.viewsCount,
-            likedByMe = post.likedByMe
+            likedByMe = post.likedByMe,
+            attachment = post.attachment?.let { AttachmentEmbeddable.fromDto(it) }
         )
     }
 
@@ -85,7 +89,18 @@ class PostEntity(
         sharesCount = sharesCount,
         viewsCount = viewsCount,
         likedByMe = likedByMe,
+        attachment = attachment?.toDto()
     )
+}
+
+data class AttachmentEmbeddable(
+    var url: String,
+    var type: Post.Attachment.AttachmentType
+) {
+    fun toDto() = Post.Attachment(url = url, description = null, type = type)
+    companion object {
+        fun fromDto(dto: Post.Attachment) = AttachmentEmbeddable(url = dto.url, type = dto.type)
+    }
 }
 
 fun List<PostEntity>.toDto() = map(PostEntity::toDto)

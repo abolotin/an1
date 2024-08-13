@@ -36,7 +36,7 @@ class PostViewHolder(
             post.attachment?.let { attach ->
                 attachment.isVisible = true
                 Glide.with(binding.root)
-                    .load(BuildConfig.BASE_URL + "images/${attach.url}")
+                    .load(BuildConfig.BASE_URL + "media/${attach.url}")
                     .timeout(10000)
                     .placeholder(R.drawable.ic_loading_100dp)
                     .error(R.drawable.ic_error_100dp)
@@ -89,7 +89,7 @@ class PostViewHolder(
                 onInteractionListener.onViewPost(post)
             }
             attachment.setOnClickListener {
-                onInteractionListener.onViewPost(post)
+                onInteractionListener.onViewPhoto(post)
             }
         }
     }

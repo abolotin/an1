@@ -13,10 +13,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.api.PostsApiImpl
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.entity.PhotoModel
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toDto
 import ru.netology.nmedia.entity.toEntity
@@ -107,15 +110,30 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
         }
     }
 
-    override suspend fun save(post: Post) {
-        var postEntity: PostEntity? = null
+    override suspend fun save(post: Post, photo: PhotoModel?) {
+        var postEntity: PostEntity?
+        var localPost = post.copy()
 
-        // Сохраняем пост в локальной БД
         try {
-            postEntity = PostEntity.fromDto(post)
+            photo?.file?.let {
+                // Загружаем фото на сервер
+                val response = PostsApiImpl.retrofitService.upload(
+                    MultipartBody.Part.createFormData(
+                        "file",
+                        it.name,
+                        it.asRequestBody()
+                    )
+                )
+                if (!response.isSuccessful) throw ApiError(response.code(), response.message())
+                val mediaResponse = response.body() ?: throw ApiError(response.code(), response.message())
+                localPost.attachment = Post.Attachment(url = mediaResponse.id)
+            }
+
+            // Сохраняем пост в локальной БД
+            postEntity = PostEntity.fromDto(localPost)
             postEntity.isUnsaved = true
             postDao.insert(postEntity)
-            if (post.id !== 0L) setAllViewed()
+            if (localPost.id !== 0L) setAllViewed()
         } catch (e: Exception) {
             // Ошибка конвертации или сохранения в БД
             throw UnknownError
