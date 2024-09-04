@@ -1,6 +1,9 @@
 package ru.netology.nmedia.adapters
 
+import android.content.res.Resources
 import android.widget.PopupMenu
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.isVisible
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -24,16 +27,16 @@ class PostViewHolder(
         binding.apply {
             author.text = post.author
             attachment.isVisible = false
-            post.authorAvatar?.let {
-                if (it.isNotEmpty()) {
-                    Glide.with(binding.root)
-                        .load(BuildConfig.BASE_URL + "avatars/$it")
-                        .timeout(10000)
-                        .placeholder(R.drawable.ic_loading_100dp)
-                        .error(R.drawable.ic_error_100dp)
-                        .transform(FitCenter(), RoundedCorners(48))
-                        .into(logo)
-                }
+            if ((post.authorAvatar != null) && post.authorAvatar.isNotEmpty()) {
+                Glide.with(binding.root)
+                    .load(BuildConfig.BASE_URL + "avatars/${post.authorAvatar}")
+                    .timeout(10000)
+                    .placeholder(R.drawable.ic_loading_100dp)
+                    .error(R.drawable.ic_error_100dp)
+                    .transform(FitCenter(), RoundedCorners(48))
+                    .into(logo)
+            } else {
+                logo.setImageDrawable(logo.context.resources.getDrawable(R.drawable.post_avatar_drawable, null))
             }
             post.attachment?.let { attach ->
                 attachment.isVisible = true

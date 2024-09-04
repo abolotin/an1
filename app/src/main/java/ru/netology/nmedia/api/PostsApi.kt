@@ -65,11 +65,11 @@ interface PostsApi {
 
     @Multipart
     @POST("users/registration")
-    suspend fun signIn(@Part("login") login: RequestBody, @Part("pass") pass: RequestBody, @Part("name") name: RequestBody, @Part media: MultipartBody.Part): Response<Token>
+    suspend fun signUp(@Part("login") login: RequestBody, @Part("pass") pass: RequestBody, @Part("name") name: RequestBody, @Part file: MultipartBody.Part?): Response<Token>
 
     @Multipart
     @POST("users/authentication")
-    suspend fun signUp(@Part login: MultipartBody.Part, @Part pass: MultipartBody.Part): Response<Token>
+    suspend fun signIn(@Part login: MultipartBody.Part, @Part pass: MultipartBody.Part): Response<Token>
 }
 
 object PostsApiImpl {

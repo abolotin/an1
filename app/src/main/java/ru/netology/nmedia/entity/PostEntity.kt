@@ -11,6 +11,7 @@ class PostEntity(
     var localId: Long = 0L,
     val author: String,
     val authorId: Long,
+    val authorAvatar: String?,
     val content: String,
     val videoUrl: String? = "",
     val published: Long,
@@ -67,6 +68,7 @@ class PostEntity(
         fun fromDto(post: Post) = PostEntity(
             id = post.id,
             localId = post.localId,
+            authorId = post.authorId,
             author = post.author,
             content = post.content,
             videoUrl = post.videoUrl,
@@ -76,7 +78,7 @@ class PostEntity(
             viewsCount = post.viewsCount,
             likedByMe = post.likedByMe,
             attachment = post.attachment?.let { AttachmentEmbeddable.fromDto(it) },
-            authorId = post.authorId
+            authorAvatar = post.authorAvatar
         )
     }
 
@@ -84,6 +86,7 @@ class PostEntity(
         id = id,
         localId = localId,
         author = author,
+        authorId = authorId,
         content = content,
         videoUrl = videoUrl,
         published = published,
@@ -92,7 +95,7 @@ class PostEntity(
         viewsCount = viewsCount,
         likedByMe = likedByMe,
         attachment = attachment?.toDto(),
-        authorId = authorId
+        authorAvatar = authorAvatar
     )
 }
 
