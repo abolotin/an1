@@ -22,4 +22,22 @@
     <string name="edit_saving_error">Во время сохранения поста произошла ошибка</string>
     <string name="new_posts_message">Новые сообщения: %1$s</string>
     <string name="menu_save">Сохранить</string>
+    <string name="auth_menu_sign_in">Регистрация</string>
+    <string name="auth_menu_sign_up">Войти</string>
+    <string name="auth_menu_logout">Выйти</string>
+    <string name="fragment_sign_in_title">Регистрация</string>
+    <string name="fragment_sign_in_login">Логин</string>
+    <string name="fragment_sign_in_password1">Пароль</string>
+    <string name="fragment_sign_in_password2">Повторите пароль</string>
+    <string name="fragment_sign_up_title">Вход</string>
+    <string name="fragment_sign_up_login">Логин</string>
+    <string name="fragment_sign_up_password">Пароль</string>
+    <string name="fragment_sign_in_button">Зарегистрироваться</string>
+    <string name="fragment_sign_up_button">Войти</string>
+    <string name="error_login_empty">Логин не может быть пустым</string>
+    <string name="error_password_empty">Пароль не может быть пустым</string>
+    <string name="error_passwords_not_equal">Повтор пароля не совпадает с паролем</string>
+    <string name="fragment_sign_in_name">Имя</string>
+    <string name="auth_required_message">Требуется авторизация</string>
+    <string name="auth_menu_cancel">Отмена</string>
 </resources>

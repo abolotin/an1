@@ -10,6 +10,7 @@ class PostEntity(
     var id: Long = 0L,
     var localId: Long = 0L,
     val author: String,
+    val authorId: Long,
     val content: String,
     val videoUrl: String? = "",
     val published: Long,
@@ -74,7 +75,8 @@ class PostEntity(
             sharesCount = post.sharesCount,
             viewsCount = post.viewsCount,
             likedByMe = post.likedByMe,
-            attachment = post.attachment?.let { AttachmentEmbeddable.fromDto(it) }
+            attachment = post.attachment?.let { AttachmentEmbeddable.fromDto(it) },
+            authorId = post.authorId
         )
     }
 
@@ -89,7 +91,8 @@ class PostEntity(
         sharesCount = sharesCount,
         viewsCount = viewsCount,
         likedByMe = likedByMe,
-        attachment = attachment?.toDto()
+        attachment = attachment?.toDto(),
+        authorId = authorId
     )
 }
 

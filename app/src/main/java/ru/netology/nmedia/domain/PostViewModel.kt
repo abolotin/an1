@@ -19,7 +19,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.activity.SingleLiveEvent
 import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.dto.Token
 import ru.netology.nmedia.entity.FeedModel
 import ru.netology.nmedia.entity.FeedState
 import ru.netology.nmedia.entity.PhotoModel
@@ -155,6 +157,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         id = 0,
         content = "",
         author = "Me",
-        published = 0
+        published = 0,
+        authorId = AppAuth.getInstance().state.value?.id ?: 0
     )
 }

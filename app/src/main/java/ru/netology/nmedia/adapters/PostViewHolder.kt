@@ -2,12 +2,14 @@ package ru.netology.nmedia.adapters
 
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.dto.Post
@@ -52,7 +54,7 @@ class PostViewHolder(
             likeIcon.isChecked = post.likedByMe
             likeIcon.isEnabled = post.isSaved
             likeIcon.setOnClickListener {
-                likeIcon.isEnabled = false
+                // likeIcon.isEnabled = false
                 onInteractionListener.onLike(post)
             }
             shareIcon.setOnClickListener {
@@ -91,6 +93,10 @@ class PostViewHolder(
             attachment.setOnClickListener {
                 onInteractionListener.onViewPhoto(post)
             }
+        }
+
+        AppAuth.getInstance().state.asLiveData().observeForever {
+            binding.menuButton.isVisible = it?.id == post.authorId
         }
     }
 }

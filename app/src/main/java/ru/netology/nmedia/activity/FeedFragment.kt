@@ -1,20 +1,24 @@
 package ru.netology.nmedia.activity
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PostViewFragment.Companion.postId
 import ru.netology.nmedia.activity.PostViewFragment.Companion.postLocalId
 import ru.netology.nmedia.adapters.PostsAdapter
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
@@ -36,6 +40,12 @@ class FeedFragment : Fragment() {
 
         val adapter = PostsAdapter(
             object : PostInteractionListenerAbstract(viewModel) {
+                override fun onLike(post: Post) {
+                    if (!AppAuth.getInstance().isAuthorized)
+                        showAuthRequireMessage()
+                    else super.onLike(post)
+                }
+
                 override fun getContext(): Context? = context
                 override fun getNavController() = findNavController()
                 override fun getNavEdit() = R.id.action_feedFragment_to_postEditFragment
@@ -48,6 +58,7 @@ class FeedFragment : Fragment() {
                         }
                     )
                 }
+
                 override fun onViewPhoto(post: Post) {
                     findNavController().navigate(
                         R.id.action_feedFragment_to_photoViewFragment,
@@ -71,16 +82,24 @@ class FeedFragment : Fragment() {
         binding.list.adapter = adapter
 
         binding.add.setOnClickListener {
-            viewModel.editedPost = viewModel.getNewPost()
-            findNavController().navigate(R.id.action_feedFragment_to_postEditFragment)
+            println("APP AUTH: "+AppAuth.getInstance().state.value?.token)
+            println("IS AUTH: "+AppAuth.getInstance().isAuthorized)
+            if (!AppAuth.getInstance().isAuthorized) {
+                showAuthRequireMessage()
+            } else {
+                viewModel.editedPost = viewModel.getNewPost()
+                findNavController().navigate(R.id.action_feedFragment_to_postEditFragment)
+            }
         }
 
-        viewModel.data.observe(viewLifecycleOwner) { dataState ->
+        viewModel.data.observe(viewLifecycleOwner)
+        { dataState ->
             binding.emptyListTitle.isVisible = dataState.isEmpty
             adapter.submitList(dataState.posts)
         }
 
-        viewModel.dataState.observe(viewLifecycleOwner) { feedState ->
+        viewModel.dataState.observe(viewLifecycleOwner)
+        { feedState ->
             binding.swiper.isRefreshing = feedState.isLoading
             if (feedState.isError) {
                 Snackbar.make(binding.root, R.string.feed_loading_error, Snackbar.LENGTH_LONG)
@@ -91,7 +110,8 @@ class FeedFragment : Fragment() {
             }
         }
 
-        viewModel.newerCount.observe(viewLifecycleOwner) {count ->
+        viewModel.newerCount.observe(viewLifecycleOwner)
+        { count ->
             binding.newPostsButton.isVisible = count > 0
             binding.newPostsButton.text = getString(R.string.new_posts_message, count.toString())
         }
@@ -106,5 +126,19 @@ class FeedFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun showAuthRequireMessage() {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.auth_required_message)
+            .setPositiveButton(R.string.auth_menu_sign_in) { _, _ ->
+                findNavController().navigate(R.id.action_feedFragment_to_signInFragment)
+            }
+            .setNeutralButton(R.string.auth_menu_sign_up) { _, _ ->
+                findNavController().navigate(R.id.action_feedFragment_to_signUpFragment)
+            }
+            .setNegativeButton(getString(R.string.auth_menu_cancel)) { _, _ ->
+            }
+            .show()
     }
 }

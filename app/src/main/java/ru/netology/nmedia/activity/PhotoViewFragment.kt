@@ -6,22 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.PostViewFragment.Companion.postId
-import ru.netology.nmedia.activity.PostViewFragment.Companion.postLocalId
-import ru.netology.nmedia.adapters.PostViewHolder
 import ru.netology.nmedia.databinding.FragmentPhotoViewBinding
-import ru.netology.nmedia.databinding.FragmentPostViewBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
-import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.LongArg
 import ru.netology.nmedia.util.numberToString
 

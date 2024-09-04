@@ -29,6 +29,7 @@ data class Like(
 
 data class NewPost(
     val author: String,
+    val authorId: Long,
     val content: String,
     val videoUrl: String,
     val published: String
@@ -132,7 +133,8 @@ class FCMService : FirebaseMessagingService() {
             author = content.author,
             content = content.content,
             videoUrl = content.videoUrl,
-            published = Date(content.published).time
+            published = Date(content.published).time,
+            authorId = content.authorId
         )
         // repository.saveAsync(post, object: PostRepository.GetPostCallback)
         showNotification(

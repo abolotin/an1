@@ -22,4 +22,22 @@
     <string name="empty_posts">No posts yet</string>
     <string name="new_posts_message">New posts: %1$s</string>
     <string name="menu_save">Save</string>
+    <string name="auth_menu_sign_in">Sign in</string>
+    <string name="auth_menu_sign_up">Sign up</string>
+    <string name="auth_menu_logout">Logout</string>
+    <string name="fragment_sign_in_title">Sign in</string>
+    <string name="fragment_sign_in_login">Login</string>
+    <string name="fragment_sign_in_password1">Password</string>
+    <string name="fragment_sign_in_password2">Repeat password</string>
+    <string name="fragment_sign_up_title">Sign up</string>
+    <string name="fragment_sign_up_login">Login</string>
+    <string name="fragment_sign_up_password">Password</string>
+    <string name="fragment_sign_in_button">Sign in</string>
+    <string name="fragment_sign_up_button">Sign up</string>
+    <string name="error_login_empty">Login must be specified</string>
+    <string name="error_password_empty">Password must be specified</string>
+    <string name="error_passwords_not_equal">Passwords must be equal</string>
+    <string name="fragment_sign_in_name">Name</string>
+    <string name="auth_required_message">Authorization required</string>
+    <string name="auth_menu_cancel">Cancel</string>
 </resources>
