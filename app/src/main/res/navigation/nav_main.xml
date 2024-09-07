@@ -52,10 +52,10 @@
         android:label="PhotoViewFragment" />
     <fragment
         android:id="@+id/signInFragment"
-        android:name="ru.netology.nmedia.activity.SignUpFragment"
+        android:name="ru.netology.nmedia.activity.SignInFragment"
         android:label="SignInFragment" />
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="ru.netology.nmedia.activity.SignInFragment"
+        android:name="ru.netology.nmedia.activity.SignUpFragment"
         android:label="SignUpFragment" />
 </navigation>

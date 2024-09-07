@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import ru.netology.nmedia.api.PostsApiImpl
+import ru.netology.nmedia.api.ApiImpl
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.entity.SignInState
 import ru.netology.nmedia.errors.ApiError
@@ -22,7 +22,7 @@ class SignInViewModel() : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = PostsApiImpl.retrofitService.signIn(
+                val response = ApiImpl.retrofitService.signIn(
                     MultipartBody.Part.createFormData(
                         "login",
                         login,

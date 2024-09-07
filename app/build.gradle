@@ -96,6 +96,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_gson_converter_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_loggin_interceptor_version"
     implementation "com.github.dhaval2404:imagepicker:$imagepicker_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlin_coroutines_version"
     testImplementation "junit:junit:$junit_version"
     testImplementation "androidx.arch.core:core-testing:$arch_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

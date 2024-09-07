@@ -10,7 +10,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.netology.nmedia.api.PostsApiImpl
+import ru.netology.nmedia.api.ApiImpl
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.entity.PhotoModel
 import ru.netology.nmedia.entity.SignUpState
@@ -32,8 +32,7 @@ class SignUpViewModel() : ViewModel() {
 
         viewModelScope.launch {
             try {
-                println("-------------- PHOTO: " + photo.value?.file);
-                val response = PostsApiImpl.retrofitService.signUp(
+                val response = ApiImpl.retrofitService.signUp(
                     login.toRequestBody("text/plain".toMediaType()),
                     password.toRequestBody("text/plain".toMediaType()),
                     name.toRequestBody("text/plain".toMediaType()),

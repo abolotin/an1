@@ -5,12 +5,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.os.IBinder.DeathRecipient
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import ru.netology.nmedia.R
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.Post
 import java.util.Date
 import kotlin.random.Random
@@ -19,6 +21,11 @@ enum class Action {
     LIKE,
     NEWPOST
 }
+
+data class PushMessage(
+    val recipientId: Long?,
+    val content: String?
+)
 
 data class Like(
     val userId: Long,
@@ -37,6 +44,7 @@ data class NewPost(
 
 class FCMService : FirebaseMessagingService() {
     private val action = "action"
+    private val recipientId = "recipientId"
     private val content = "content"
     private val gson = Gson()
     private val channelId = "nmediaChannel"
@@ -65,6 +73,19 @@ class FCMService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
         try {
+            val pushMessage = gson.fromJson(message.data[content], PushMessage::class.java)
+            pushMessage.recipientId?.let {
+                if ((!AppAuth.getInstance().isAuthorized)
+                    || (AppAuth.getInstance().state.value?.id != it))
+                    return
+            }
+
+            showNotification(
+                getString(R.string.push_message_title),
+                pushMessage.content
+            )
+
+            /*
             message.data[action]?.let {
                 when (Action.valueOf(it)) {
                     Action.LIKE -> handleLike(
@@ -82,13 +103,15 @@ class FCMService : FirebaseMessagingService() {
                     )
                 }
             }
+            */
         } catch (e: IllegalArgumentException) {
-            println("Exception: " + e.message)
+            e.printStackTrace()
         }
     }
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
+        AppAuth.getInstance().sendPushToken(token)
     }
 
     @SuppressLint("MissingPermission")

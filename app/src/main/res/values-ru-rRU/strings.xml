@@ -40,4 +40,5 @@
     <string name="fragment_sign_up_name">Имя</string>
     <string name="auth_required_message">Требуется авторизация</string>
     <string name="auth_menu_cancel">Отмена</string>
+    <string name="push_message_title">Получено сообщение</string>
 </resources>

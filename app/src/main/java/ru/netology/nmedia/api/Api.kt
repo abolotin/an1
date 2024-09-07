@@ -12,6 +12,7 @@ import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.dto.PushToken
 import ru.netology.nmedia.dto.Token
 
 private val okHttpClient = OkHttpClient.Builder()
@@ -40,7 +41,7 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
-interface PostsApi {
+interface Api {
     @GET("posts")
     suspend fun getAll(): Response<List<Post>>
 
@@ -70,10 +71,13 @@ interface PostsApi {
     @Multipart
     @POST("users/authentication")
     suspend fun signIn(@Part login: MultipartBody.Part, @Part pass: MultipartBody.Part): Response<Token>
+
+    @POST("users/push-tokens")
+    suspend fun sendPushToken(@Body pushToken: PushToken): Response<Unit>
 }
 
-object PostsApiImpl {
-    val retrofitService: PostsApi by lazy {
-        retrofit.create(PostsApi::class.java)
+object ApiImpl {
+    val retrofitService: Api by lazy {
+        retrofit.create(Api::class.java)
     }
 }

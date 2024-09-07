@@ -2,13 +2,17 @@ package ru.netology.nmedia.auth
 
 import android.content.Context
 import androidx.core.content.edit
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import ru.netology.nmedia.api.ApiImpl
+import ru.netology.nmedia.dto.PushToken
 import ru.netology.nmedia.dto.Token
 
 class AppAuth private constructor(context: Context) {
@@ -27,6 +31,7 @@ class AppAuth private constructor(context: Context) {
         } else {
             prefs.edit { clear() }
         }
+        sendPushToken()
     }
 
     fun setAuth(id: Long, token: String) {
@@ -36,6 +41,7 @@ class AppAuth private constructor(context: Context) {
             apply()
         }
         _state.value = Token(id, token)
+        sendPushToken()
     }
 
     fun clearAuth() {
@@ -44,6 +50,7 @@ class AppAuth private constructor(context: Context) {
             apply()
         }
         _state.value = null
+        sendPushToken()
     }
 
     companion object {
@@ -58,6 +65,17 @@ class AppAuth private constructor(context: Context) {
 
         fun init(context: Context) {
             INSTANCE = AppAuth(context.applicationContext)
+        }
+    }
+
+    fun sendPushToken(token: String? = null) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val pushToken = PushToken(token ?: Firebase.messaging.token.await())
+                ApiImpl.retrofitService.sendPushToken(pushToken)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

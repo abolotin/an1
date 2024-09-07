@@ -82,8 +82,6 @@ class FeedFragment : Fragment() {
         binding.list.adapter = adapter
 
         binding.add.setOnClickListener {
-            println("APP AUTH: "+AppAuth.getInstance().state.value?.token)
-            println("IS AUTH: "+AppAuth.getInstance().isAuthorized)
             if (!AppAuth.getInstance().isAuthorized) {
                 showAuthRequireMessage()
             } else {
