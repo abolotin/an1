@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentPhotoViewBinding
@@ -18,6 +19,7 @@ import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.util.LongArg
 import ru.netology.nmedia.util.numberToString
 
+@AndroidEntryPoint
 class PhotoViewFragment : Fragment() {
     companion object {
         var Bundle.postId: Long? by LongArg

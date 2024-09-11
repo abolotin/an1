@@ -14,12 +14,21 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.ActivityAppBinding
 import ru.netology.nmedia.domain.AuthViewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AppActivity : AppCompatActivity() {
+    @Inject
+    lateinit var appAuth: AppAuth
+
+    @Inject
+    lateinit var googleApiAvailability: GoogleApiAvailability
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityAppBinding.inflate(layoutInflater)
@@ -48,7 +57,6 @@ class AppActivity : AppCompatActivity() {
                             true
                         }
                         R.id.sign_up -> {
-                            // AppAuth.getInstance().setAuth(5, "x-token")
                             val navController = Navigation.findNavController(
                                 this@AppActivity,
                                 R.id.fragment_container_view
@@ -57,7 +65,7 @@ class AppActivity : AppCompatActivity() {
                             true
                         }
                         R.id.logout -> {
-                            AppAuth.getInstance().clearAuth()
+                            appAuth.clearAuth()
                             true
                         }
                         else -> return false
@@ -69,7 +77,7 @@ class AppActivity : AppCompatActivity() {
     }
 
     private fun checkGooglePlayServices() {
-        with(GoogleApiAvailability.getInstance()) {
+        with(googleApiAvailability) {
             val code = isGooglePlayServicesAvailable(this@AppActivity)
             if (code != ConnectionResult.SUCCESS) {
                 if (isUserResolvableError(code)) {

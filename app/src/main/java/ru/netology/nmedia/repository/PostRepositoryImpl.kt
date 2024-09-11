@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import ru.netology.nmedia.api.ApiImpl
+import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PhotoModel
@@ -27,9 +27,13 @@ import ru.netology.nmedia.errors.DatabaseError
 import ru.netology.nmedia.errors.NetworkError
 import ru.netology.nmedia.errors.UnknownError
 import java.io.IOException
+import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext
 
-class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
+class PostRepositoryImpl @Inject constructor (
+    private val postDao: PostDao,
+    private val api: Api
+) : PostRepository {
     override val data = postDao.getAll()
         .flowOn(Dispatchers.Default)
         .map { entityList ->
@@ -45,7 +49,7 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
 
     override suspend fun getAll() {
         try {
-            val response = ApiImpl.retrofitService.getAll()
+            val response = api.getAll()
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             response.body()?.let {
                 postDao.insert(it.toEntity())
@@ -113,7 +117,7 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
         try {
             photo?.file?.let {
                 // Загружаем фото на сервер
-                val response = ApiImpl.retrofitService.upload(
+                val response = api.upload(
                     MultipartBody.Part.createFormData(
                         "file",
                         it.name,
@@ -150,7 +154,7 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
 
     private suspend fun removeOnServer(post: PostEntity) {
         try {
-            val response = ApiImpl.retrofitService.removeById(post.id)
+            val response = api.removeById(post.id)
             if (!response.isSuccessful) throw Exception()
             postDao.removePost(post.id, post.localId)
         } catch (e: Exception) {
@@ -175,7 +179,7 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
 
     private suspend fun saveOnServer(post: PostEntity) {
         try {
-            val response = ApiImpl.retrofitService.save(post.toDto())
+            val response = api.save(post.toDto())
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             response.body()?.let {
                 // Заменяем локальную запись на серверную.
@@ -199,9 +203,9 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
 
         try {
             val response = if (post.likedByMe)
-                ApiImpl.retrofitService.likeByMe(post.id)
+                api.likeByMe(post.id)
             else
-                ApiImpl.retrofitService.unlikeByMe(post.id)
+                api.unlikeByMe(post.id)
 
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
             response.body()?.let {
@@ -223,7 +227,7 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
         while (true) {
             delay(10_000L)
             try {
-                /*val response = ApiImpl.retrofitService.getNewer(id)
+                val response = api.getNewer(id)
 
                 if (!response.isSuccessful)
                     throw ApiError(response.code(), response.message())
@@ -232,8 +236,6 @@ class PostRepositoryImpl(private val postDao: PostDao) : PostRepository {
                 val entities = body.toNewEntity()
                 postDao.insert(entities)
                 emit(entities.size)
-                 */
-                emit(0)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: ApiError) {

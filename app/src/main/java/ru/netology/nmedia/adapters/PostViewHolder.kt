@@ -1,9 +1,6 @@
 package ru.netology.nmedia.adapters
 
-import android.content.res.Resources
 import android.widget.PopupMenu
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.isVisible
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -19,10 +16,12 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.numberToString
 import java.util.Date
 
-class PostViewHolder(
+class PostViewHolder constructor (
     private val binding: CardPostBinding,
     private val onInteractionListener: PostInteractionListener,
+    private val appAuth: AppAuth
 ) : RecyclerView.ViewHolder(binding.root) {
+
     fun bind(post: Post) {
         binding.apply {
             author.text = post.author
@@ -98,7 +97,7 @@ class PostViewHolder(
             }
         }
 
-        AppAuth.getInstance().state.asLiveData().observeForever {
+        appAuth.state.asLiveData().observeForever {
             binding.menuButton.isVisible = it?.id == post.authorId
         }
     }

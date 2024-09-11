@@ -5,20 +5,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.netology.nmedia.api.ApiImpl
+import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.entity.PhotoModel
 import ru.netology.nmedia.entity.SignUpState
 import ru.netology.nmedia.errors.ApiError
 import ru.netology.nmedia.errors.NetworkError
 import java.io.File
+import javax.inject.Inject
 
-class SignUpViewModel() : ViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val appAuth: AppAuth,
+    private val api: Api
+) : ViewModel() {
     val _state = MutableLiveData<SignUpState>()
     val state: LiveData<SignUpState>
         get() = _state
@@ -32,7 +38,7 @@ class SignUpViewModel() : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = ApiImpl.retrofitService.signUp(
+                val response = api.signUp(
                     login.toRequestBody("text/plain".toMediaType()),
                     password.toRequestBody("text/plain".toMediaType()),
                     name.toRequestBody("text/plain".toMediaType()),
@@ -48,7 +54,7 @@ class SignUpViewModel() : ViewModel() {
                 if (!response.isSuccessful)
                     throw ApiError(response.code(), response.message())
                 val token = response.body() ?: throw ApiError(response.code(), "Empty response")
-                AppAuth.getInstance().setAuth(token.id, token.token)
+                appAuth.setAuth(token.id, token.token)
                 _state.postValue(SignUpState(status = SignUpState.Status.SUCCESS))
             } catch (e: ApiError) {
                 _state.postValue(

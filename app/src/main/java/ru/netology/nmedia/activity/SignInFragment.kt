@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentSignInBinding
 import ru.netology.nmedia.domain.SignInViewModel
 import ru.netology.nmedia.util.LongArg
 
+@AndroidEntryPoint
 class SignInFragment : Fragment() {
     companion object {
         var Bundle.postId: Long? by LongArg

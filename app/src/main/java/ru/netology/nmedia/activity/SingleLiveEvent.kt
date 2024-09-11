@@ -3,6 +3,7 @@ package ru.netology.nmedia.activity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import dagger.hilt.android.AndroidEntryPoint
 
 class SingleLiveEvent<T> : MutableLiveData<T>() {
     private var pending = false

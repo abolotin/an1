@@ -4,15 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import ru.netology.nmedia.api.ApiImpl
+import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.entity.SignInState
 import ru.netology.nmedia.errors.ApiError
 import ru.netology.nmedia.errors.NetworkError
+import javax.inject.Inject
 
-class SignInViewModel() : ViewModel() {
+@HiltViewModel
+class SignInViewModel @Inject constructor (
+    private val appAuth: AppAuth,
+    private val api: Api
+) : ViewModel() {
     val _state = MutableLiveData<SignInState>()
     val state : LiveData<SignInState>
         get() = _state
@@ -22,7 +28,7 @@ class SignInViewModel() : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = ApiImpl.retrofitService.signIn(
+                val response = api.signIn(
                     MultipartBody.Part.createFormData(
                         "login",
                         login,
@@ -35,7 +41,7 @@ class SignInViewModel() : ViewModel() {
                 if (!response.isSuccessful)
                     throw ApiError(response.code(), response.message())
                 val token = response.body() ?: throw ApiError(response.code(), "Empty response")
-                AppAuth.getInstance().setAuth(token.id, token.token)
+                appAuth.setAuth(token.id, token.token)
                 _state.postValue(SignInState(status = SignInState.Status.SUCCESS))
             } catch (e: ApiError) {
                 _state.postValue(SignInState(status = SignInState.Status.ERROR, errorMessage = e.message ?: "API error"))

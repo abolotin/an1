@@ -5,9 +5,11 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
@@ -25,11 +27,16 @@ import ru.netology.nmedia.repository.AppDb
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 import java.io.File
+import javax.inject.Inject
 
-class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryImpl(
+@HiltViewModel
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    private val appAuth: AppAuth
+) : ViewModel() {
+    /* private val repository: PostRepository = PostRepositoryImpl(
         AppDb.getInstance(context = application).postDao()
-    )
+    ) */
 
     val data = repository.data
         .debounce(200L)
@@ -152,6 +159,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         content = "",
         author = "Me",
         published = 0,
-        authorId = AppAuth.getInstance().state.value?.id ?: 0
+        authorId = appAuth.state.value?.id ?: 0
     )
 }

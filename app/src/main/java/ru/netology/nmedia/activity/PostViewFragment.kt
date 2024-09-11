@@ -8,15 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapters.PostViewHolder
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentPostViewBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.LongArg
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PostViewFragment : Fragment() {
+    @Inject
+    lateinit var appAuth: AppAuth
+
     companion object {
         var Bundle.postId: Long? by LongArg
         var Bundle.postLocalId: Long? by LongArg
@@ -34,8 +41,9 @@ class PostViewFragment : Fragment() {
 
         val viewModel: PostViewModel by activityViewModels()
         val postViewHolder = PostViewHolder(
-            binding.included,
-            object : PostInteractionListenerAbstract(viewModel) {
+            binding = binding.included,
+            appAuth = appAuth,
+            onInteractionListener =  object : PostInteractionListenerAbstract(viewModel) {
                 override fun getContext(): Context? = context
                 override fun getNavController() = findNavController()
                 override fun getNavEdit() = R.id.action_postViewFragment_to_postEditFragment

@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PostViewFragment.Companion.postId
 import ru.netology.nmedia.activity.PostViewFragment.Companion.postLocalId
@@ -23,9 +23,14 @@ import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
+    @Inject
+    lateinit var appAuth: AppAuth
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,9 +44,10 @@ class FeedFragment : Fragment() {
         val viewModel: PostViewModel by activityViewModels()
 
         val adapter = PostsAdapter(
-            object : PostInteractionListenerAbstract(viewModel) {
+            appAuth = appAuth,
+            onInteractionListener =  object : PostInteractionListenerAbstract(viewModel) {
                 override fun onLike(post: Post) {
-                    if (!AppAuth.getInstance().isAuthorized)
+                    if (!appAuth.isAuthorized)
                         showAuthRequireMessage()
                     else super.onLike(post)
                 }
@@ -82,7 +88,7 @@ class FeedFragment : Fragment() {
         binding.list.adapter = adapter
 
         binding.add.setOnClickListener {
-            if (!AppAuth.getInstance().isAuthorized) {
+            if (!appAuth.isAuthorized) {
                 showAuthRequireMessage()
             } else {
                 viewModel.editedPost = viewModel.getNewPost()

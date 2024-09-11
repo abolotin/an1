@@ -15,7 +15,7 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.dto.PushToken
 import ru.netology.nmedia.dto.Token
 
-private val okHttpClient = OkHttpClient.Builder()
+/* private val okHttpClient = OkHttpClient.Builder()
     .addInterceptor(HttpLoggingInterceptor().apply {
         if (BuildConfig.DEBUG)
             level = HttpLoggingInterceptor.Level.BODY
@@ -39,7 +39,7 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BuildConfig.BASE_URL + "api/")
     .client(okHttpClient)
     .addConverterFactory(GsonConverterFactory.create())
-    .build()
+    .build() */
 
 interface Api {
     @GET("posts")
@@ -76,8 +76,9 @@ interface Api {
     suspend fun sendPushToken(@Body pushToken: PushToken): Response<Unit>
 }
 
+/*
 object ApiImpl {
     val retrofitService: Api by lazy {
         retrofit.create(Api::class.java)
     }
-}
+} */

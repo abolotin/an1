@@ -18,12 +18,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentPostEditBinding
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.entity.PhotoModel
 import ru.netology.nmedia.entity.PostEntity
 
+@AndroidEntryPoint
 class PostEditFragment : Fragment() {
     companion object {
         var draftContent: String = ""
