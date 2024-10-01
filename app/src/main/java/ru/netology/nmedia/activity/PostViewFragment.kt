@@ -7,8 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapters.PostViewHolder
 import ru.netology.nmedia.auth.AppAuth
@@ -16,6 +20,7 @@ import ru.netology.nmedia.databinding.FragmentPostViewBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
 import ru.netology.nmedia.domain.PostViewModel
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.LongArg
 import javax.inject.Inject
 
@@ -23,6 +28,9 @@ import javax.inject.Inject
 class PostViewFragment : Fragment() {
     @Inject
     lateinit var appAuth: AppAuth
+
+    @Inject
+    lateinit var repository: PostRepository
 
     companion object {
         var Bundle.postId: Long? by LongArg
@@ -65,12 +73,24 @@ class PostViewFragment : Fragment() {
 
         arguments?.postId?.let { postId ->
             arguments?.postLocalId?.let { localId ->
+                lifecycleScope.launch {
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                        repository.getLocalOne(postId, localId)?.let { post ->
+                            postViewHolder.bind(post)
+                        }
+                    }
+                }
+            }
+        }
+
+        /* arguments?.postId?.let { postId ->
+            arguments?.postLocalId?.let { localId ->
                 viewModel.data.observe(viewLifecycleOwner) { data ->
                     data.posts.filter { it.id == postId && it.localId == localId }.firstOrNull()
                         ?.let { postViewHolder.bind(it) }
                 }
             }
-        }
+        } */
 
         return binding.root
     }

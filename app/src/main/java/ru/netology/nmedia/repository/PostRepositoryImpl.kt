@@ -1,6 +1,10 @@
 package ru.netology.nmedia.repository
 
 import android.database.SQLException
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +17,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import ru.netology.nmedia.adapters.PostDBPagingSource
+import ru.netology.nmedia.adapters.PostPagingSource
 import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
@@ -34,7 +40,19 @@ class PostRepositoryImpl @Inject constructor (
     private val postDao: PostDao,
     private val api: Api
 ) : PostRepository {
-    override val data = postDao.getAll()
+    override val data: Flow<PagingData<Post>> = Pager(
+        config = PagingConfig(pageSize = 5, enablePlaceholders = false),
+        pagingSourceFactory = {
+            // PostPagingSource(api)
+            PostDBPagingSource(postDao, this, api)
+        }
+    ).flow.map {
+        it.map { entity ->
+            entity.toDto()
+        }
+    }
+
+    /* override val data = postDao.getAll()
         .flowOn(Dispatchers.Default)
         .map { entityList ->
             val updatedList = entityList.filter { it.isUpdated }
@@ -45,9 +63,9 @@ class PostRepositoryImpl @Inject constructor (
                 !it.isDeleted && !(it.localIsNew ?: false)
             }
                 .toDto()
-        }
+        }*/
 
-    override suspend fun getAll() {
+    override suspend fun loadAll() {
         try {
             val response = api.getAll()
             if (!response.isSuccessful) throw ApiError(response.code(), response.message())
@@ -62,6 +80,10 @@ class PostRepositoryImpl @Inject constructor (
             throw UnknownError
         }
     }
+
+    override suspend fun getLocalOne(id: Long, localId: Long) = postDao.getByLocalId(id, localId)?.toDto()
+
+    override suspend fun getLocalLast() = postDao.getLast()?.toDto()
 
     override suspend fun likeByMe(id: Long) {
         try {

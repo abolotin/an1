@@ -1,6 +1,7 @@
 package ru.netology.nmedia.dao
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,11 +11,20 @@ import ru.netology.nmedia.entity.PostEntity
 
 @Dao
 interface PostDao {
+    //@Query("SELECT * FROM PostEntity ORDER BY localId DESC, id DESC")
+    //fun getAll(): Flow<List<PostEntity>>
+
     @Query("SELECT * FROM PostEntity ORDER BY localId DESC, id DESC")
-    fun getAll(): Flow<List<PostEntity>>
+    fun getAllPaged(): PagingSource<Int, PostEntity>
 
     @Query("SELECT * FROM PostEntity WHERE id = :id")
     suspend fun getById(id: Long): PostEntity?
+
+    @Query("SELECT * FROM PostEntity WHERE id = :id AND localId = :localId")
+    suspend fun getByLocalId(id: Long, localId: Long): PostEntity?
+
+    @Query("SELECT * FROM PostEntity ORDER BY id DESC LIMIT 1")
+    suspend fun getLast(): PostEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: PostEntity)
