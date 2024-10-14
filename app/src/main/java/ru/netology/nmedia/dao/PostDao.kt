@@ -37,4 +37,7 @@ interface PostDao {
 
     @Query("UPDATE PostEntity SET localIsNew = false")
     suspend fun setAllViewed()
+
+    @Query("DELETE FROM PostEntity")
+    suspend fun clear()
 }

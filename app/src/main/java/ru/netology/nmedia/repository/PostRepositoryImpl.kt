@@ -1,6 +1,7 @@
 package ru.netology.nmedia.repository
 
 import android.database.SQLException
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -21,6 +22,7 @@ import ru.netology.nmedia.adapters.PostDBPagingSource
 import ru.netology.nmedia.adapters.PostPagingSource
 import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.dao.PostDao
+import ru.netology.nmedia.dao.PostRemoteKeyDao
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PhotoModel
 import ru.netology.nmedia.entity.PostEntity
@@ -33,23 +35,32 @@ import ru.netology.nmedia.errors.DatabaseError
 import ru.netology.nmedia.errors.NetworkError
 import ru.netology.nmedia.errors.UnknownError
 import java.io.IOException
+import java.security.PrivateKey
 import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext
 
 class PostRepositoryImpl @Inject constructor (
     private val postDao: PostDao,
-    private val api: Api
+    private val api: Api,
+    private val postRemoteKeyDao: PostRemoteKeyDao,
+    private val appDb: AppDb
 ) : PostRepository {
+    @OptIn(ExperimentalPagingApi::class)
     override val data: Flow<PagingData<Post>> = Pager(
         config = PagingConfig(pageSize = 5, enablePlaceholders = false),
         pagingSourceFactory = {
             // PostPagingSource(api)
-            PostDBPagingSource(postDao, this, api)
-        }
+            // PostDBPagingSource(postDao, this, api)
+            postDao.getAllPaged()
+        },
+        remoteMediator = PostRemoteMediator(
+            api = api,
+            dao = postDao,
+            keyDao = postRemoteKeyDao,
+            appDb = appDb
+        )
     ).flow.map {
-        it.map { entity ->
-            entity.toDto()
-        }
+        it.map(PostEntity::toDto)
     }
 
     /* override val data = postDao.getAll()
@@ -246,7 +257,8 @@ class PostRepositoryImpl @Inject constructor (
     }
 
     override fun getNewerCount(id: Long): Flow<Int> = flow {
-        while (true) {
+        emit(0);
+        /*while (true) {
             delay(10_000L)
             try {
                 val response = api.getNewer(id)
@@ -267,7 +279,7 @@ class PostRepositoryImpl @Inject constructor (
             } catch (e: Exception) {
                 throw UnknownError
             }
-        }
+        }*/
     }
         .catch { e -> throw AppErrors.from(e) }
         .flowOn(Dispatchers.Default)
