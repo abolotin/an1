@@ -90,7 +90,7 @@ class PostViewModel @Inject constructor(
     fun loadPosts() {
         _dataState.postValue(FeedState(status = FeedState.Status.LOADING))
 
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             try {
                 repository.getNewerCount(repository.getLocalLast()?.id ?: 0L)
                     .collectLatest { _newerCount.postValue(it) }
@@ -112,7 +112,7 @@ class PostViewModel @Inject constructor(
                 e.printStackTrace()
                 _dataState.postValue(FeedState(status = FeedState.Status.ERROR))
             }
-        }
+        }*/
     }
 
     fun getById(id: Long): Post? = posts.filter { id == it.id }.firstOrNull()

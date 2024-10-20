@@ -1,6 +1,7 @@
 package ru.netology.nmedia.repository
 
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
 import androidx.paging.LoadType
 import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadParams
@@ -39,6 +40,7 @@ class PostRemoteMediator(
                     if (id == null) api.getLatest(state.config.pageSize)
                     else api.getAfter(id, state.config.pageSize)
                 }
+
                 LoadType.PREPEND -> {
                     return MediatorResult.Success(false)
                     //val id = keyDao.max() ?: return MediatorResult.Success(false)
@@ -57,19 +59,22 @@ class PostRemoteMediator(
             appDb.withTransaction {
                 when (loadType) {
                     LoadType.REFRESH -> {
-                        dao.clear()
-                        keyDao.insert(
-                            listOf(
-                                PostRemoteKeyEntity(
-                                    type = PostRemoteKeyEntity.KeyType.AFTER,
-                                    key = body.first().id
-                                ),
+                        // dao.clear()
+                        val list = mutableListOf(
+                            PostRemoteKeyEntity(
+                                type = PostRemoteKeyEntity.KeyType.AFTER,
+                                key = body.first().id
+                            )
+                        )
+                        keyDao.max()?.let {
+                            list.add(
                                 PostRemoteKeyEntity(
                                     type = PostRemoteKeyEntity.KeyType.BEFORE,
                                     key = body.last().id
                                 )
                             )
-                        )
+                        }
+                        keyDao.insert(list)
                     }
 
                     LoadType.PREPEND -> {

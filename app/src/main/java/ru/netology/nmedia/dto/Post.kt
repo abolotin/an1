@@ -2,9 +2,13 @@ package ru.netology.nmedia.dto
 
 import kotlinx.serialization.Serializable
 
+sealed interface FeedItem {
+    val id: Long
+}
+
 @Serializable
 data class Post(
-    val id: Long,
+    override val id: Long,
     val localId: Long = 0L,
     val authorId: Long,
     val author: String,
@@ -17,7 +21,7 @@ data class Post(
     var viewsCount: Long = 0,
     var likedByMe: Boolean = false,
     var attachment: Attachment? = null
-) {
+) : FeedItem {
     val isSaved: Boolean
         get() = (localId == 0L)
     @Serializable
@@ -31,6 +35,11 @@ data class Post(
         }
     }
 }
+
+data class DateSeparator(
+    override val id: Long,
+    val text: String
+) : FeedItem
 
 data class Media(
     val id: String
