@@ -29,7 +29,9 @@
         android:layout_width="@dimen/post_avatar_size"
         android:layout_height="@dimen/post_avatar_size"
         android:src="@drawable/post_avatar_drawable"
-        app:layout_constraintTop_toBottomOf="@id/dateText" />
+        app:layout_constraintTop_toBottomOf="@id/dateText"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
     <TextView
         android:id="@+id/author"
