@@ -20,7 +20,8 @@ data class Post(
     var sharesCount: Long = 0,
     var viewsCount: Long = 0,
     var likedByMe: Boolean = false,
-    var attachment: Attachment? = null
+    var attachment: Attachment? = null,
+    var showDate: Boolean = false
 ) : FeedItem {
     val isSaved: Boolean
         get() = (localId == 0L)
@@ -35,11 +36,6 @@ data class Post(
         }
     }
 }
-
-data class DateSeparator(
-    override val id: Long,
-    val text: String
-) : FeedItem
 
 data class Media(
     val id: String

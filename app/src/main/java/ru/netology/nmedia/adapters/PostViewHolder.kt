@@ -14,6 +14,7 @@ import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.domain.PostInteractionListener
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.numberToString
+import ru.netology.nmedia.util.timeToFeedSeparatorText
 import java.util.Date
 
 class PostViewHolder constructor (
@@ -55,6 +56,10 @@ class PostViewHolder constructor (
             viewIcon.isEnabled = post.isSaved
             likeIcon.isChecked = post.likedByMe
             likeIcon.isEnabled = post.isSaved
+            if (post.showDate) {
+                dateText.text = timeToFeedSeparatorText(post.published)
+                dateText.isVisible = true
+            } else dateText.isVisible = false
             likeIcon.setOnClickListener {
                 // likeIcon.isEnabled = false
                 onInteractionListener.onLike(post)

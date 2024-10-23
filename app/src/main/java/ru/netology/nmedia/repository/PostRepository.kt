@@ -2,11 +2,12 @@ package ru.netology.nmedia.repository
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PhotoModel
 
 interface PostRepository {
-    val data: Flow<PagingData<Post>>
+    val data: Flow<PagingData<FeedItem>>
     suspend fun loadAll()
     suspend fun getLocalOne(id: Long, localId: Long): Post?
     suspend fun getLocalLast(): Post?

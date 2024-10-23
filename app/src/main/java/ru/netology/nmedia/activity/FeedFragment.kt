@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,7 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PostViewFragment.Companion.postId
 import ru.netology.nmedia.activity.PostViewFragment.Companion.postLocalId
 import ru.netology.nmedia.adapters.PostsAdapter
+import ru.netology.nmedia.adapters.PostsLoadStateAdapter
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.domain.PostInteractionListenerAbstract
@@ -91,7 +93,10 @@ class FeedFragment : Fragment() {
             }
         ) */
 
-        binding.list.adapter = adapter
+        binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = PostsLoadStateAdapter { adapter.retry() },
+            footer = PostsLoadStateAdapter { adapter.retry() }
+        )
 
         binding.add.setOnClickListener {
             if (!appAuth.isAuthorized) {
@@ -115,8 +120,8 @@ class FeedFragment : Fragment() {
                 adapter.loadStateFlow.collectLatest { state ->
                     binding.swiper.isRefreshing =
                         state.refresh is LoadState.Loading
-                                || state.prepend is LoadState.Loading
-                                || state.append is LoadState.Loading
+                                // || state.prepend is LoadState.Loading
+                                // || state.append is LoadState.Loading
                     if (state.hasError) {
                         Snackbar.make(
                             binding.root,

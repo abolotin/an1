@@ -2,6 +2,7 @@ package ru.netology.nmedia.util
 
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.util.Date
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -23,3 +24,9 @@ fun numberToString(number: Long): String {
     )
 }
 
+fun timeToFeedSeparatorText(unixtime: Long): String {
+    val currentTime = Date()
+    if ((currentTime.time/1000L - unixtime) < 86400) return "Сегодня"
+    if ((currentTime.time/1000L - unixtime) < 2*86400) return "Вчера"
+    return "На прошлой неделе"
+}

@@ -1,10 +1,14 @@
 package ru.netology.nmedia.repository
 
 import android.database.SQLException
+import android.icu.text.DateFormat
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +27,7 @@ import ru.netology.nmedia.adapters.PostPagingSource
 import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dao.PostRemoteKeyDao
+import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PhotoModel
 import ru.netology.nmedia.entity.PostEntity
@@ -34,19 +39,24 @@ import ru.netology.nmedia.errors.AppErrors
 import ru.netology.nmedia.errors.DatabaseError
 import ru.netology.nmedia.errors.NetworkError
 import ru.netology.nmedia.errors.UnknownError
+import ru.netology.nmedia.util.timeToFeedSeparatorText
 import java.io.IOException
 import java.security.PrivateKey
+import java.util.Calendar
+import java.util.Date
+import java.util.Formatter
 import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext
 
-class PostRepositoryImpl @Inject constructor (
+class PostRepositoryImpl @Inject constructor(
     private val postDao: PostDao,
     private val api: Api,
     private val postRemoteKeyDao: PostRemoteKeyDao,
     private val appDb: AppDb
 ) : PostRepository {
+    @RequiresApi(Build.VERSION_CODES.N)
     @OptIn(ExperimentalPagingApi::class)
-    override val data: Flow<PagingData<Post>> = Pager(
+    override val data: Flow<PagingData<FeedItem>> = Pager(
         config = PagingConfig(pageSize = 5, enablePlaceholders = false),
         pagingSourceFactory = {
             // PostPagingSource(api)
@@ -61,6 +71,23 @@ class PostRepositoryImpl @Inject constructor (
         )
     ).flow.map {
         it.map(PostEntity::toDto)
+            .insertSeparators { postPrev: Post?, postNext: Post? ->
+                if (postPrev != null) {
+                    if (postPrev.id == postRemoteKeyDao.max()) {
+                        postPrev.showDate = true;
+                        return@insertSeparators null
+                    }
+                    postPrev.showDate = false;
+                };
+                if ((postPrev == null) || (postNext == null)) return@insertSeparators null
+                val currentTime = Date();
+                val prevDaysDiff = (currentTime.time/1000L - postPrev.published)/86400L
+                val nextDaysDiff = (currentTime.time/1000L - postPrev.published)/86400L
+                if ((prevDaysDiff == nextDaysDiff) || (prevDaysDiff-nextDaysDiff > 2)) return@insertSeparators null;
+                // return@insertSeparators DateSeparator(text = timeToFeedSeparatorText(postPrev.published))
+                postPrev.showDate = true;
+                null
+            }
     }
 
     /* override val data = postDao.getAll()
@@ -92,7 +119,8 @@ class PostRepositoryImpl @Inject constructor (
         }
     }
 
-    override suspend fun getLocalOne(id: Long, localId: Long) = postDao.getByLocalId(id, localId)?.toDto()
+    override suspend fun getLocalOne(id: Long, localId: Long) =
+        postDao.getByLocalId(id, localId)?.toDto()
 
     override suspend fun getLocalLast() = postDao.getLast()?.toDto()
 
@@ -158,7 +186,8 @@ class PostRepositoryImpl @Inject constructor (
                     )
                 )
                 if (!response.isSuccessful) throw ApiError(response.code(), response.message())
-                val mediaResponse = response.body() ?: throw ApiError(response.code(), response.message())
+                val mediaResponse =
+                    response.body() ?: throw ApiError(response.code(), response.message())
                 localPost.attachment = Post.Attachment(url = mediaResponse.id)
             }
 
