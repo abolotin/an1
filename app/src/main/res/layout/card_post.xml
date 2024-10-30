@@ -143,7 +143,8 @@
         app:icon="@drawable/ic_like_24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bar2"
-        app:toggleCheckedStateOnClick="false" />
+        app:toggleCheckedStateOnClick="false"
+        android:textSize="16sp"/>
 
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.AppTheme.ToolButton"
@@ -153,7 +154,8 @@
         android:background="@android:color/transparent"
         app:layout_constraintStart_toEndOf="@id/likeIcon"
         app:layout_constraintTop_toBottomOf="@+id/bar2"
-        app:icon="@drawable/ic_share_24" />
+        app:icon="@drawable/ic_share_24"
+        android:textSize="16sp"/>
 
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.AppTheme.ToolButton"
@@ -163,6 +165,7 @@
         android:background="@android:color/transparent"
         app:layout_constraintStart_toEndOf="@+id/shareIcon"
         app:layout_constraintTop_toBottomOf="@+id/bar2"
-        app:icon="@drawable/ic_views_24" />
+        app:icon="@drawable/ic_views_24"
+        android:textSize="16sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,13 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swiper"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:layout_margin="@dimen/common_spacing">
+    android:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/common_spacing"
         tools:context=".activity.AppActivity">
 
         <androidx.recyclerview.widget.RecyclerView
